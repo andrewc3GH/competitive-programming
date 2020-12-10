@@ -1,0 +1,121 @@
+/*
+ID: cruzan1
+LANG: JAVA
+TASK: holstein
+*/
+
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static HashSet<HashSet<Integer>> combinationList;
+  public static int counter;
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("holstein.in"));
+    int V = s.nextInt();
+    int[] vitaminArray = new int[V];
+    for (int i = 0; i < V; i++) {
+      vitaminArray[i] = s.nextInt();
+    }
+    int G = s.nextInt();
+    int[][] feedArray = new int[G][V];
+    for (int i = 0; i < G; i++) {
+      for (int j = 0; j < V; j++) {
+        feedArray[i][j] = s.nextInt();
+      }
+    }
+    /*for (int[] row : feedArray) {
+      System.out.println(Arrays.toString(row));
+    }*/
+    System.out.println("here");
+    /*HashSet<HashSet<Integer>> testSet = new HashSet<>();
+    HashSet<Integer> newArray = new HashSet<>();
+    newArray.add(1);
+    newArray.add(3);
+    testSet.add(newArray);
+    HashSet<Integer> new1Array = new HashSet<>();
+    new1Array.add(3);
+    new1Array.add(1);
+    testSet.add(new1Array);
+    System.out.println(testSet);*/
+    counter = 0;
+    combinationList = new HashSet<>();
+    findCombinations(new HashSet<>(), G);
+    System.out.println(counter);
+    int[] minStats = new int[V];
+    HashSet<Integer> minIndex = new HashSet<Integer>();
+    int minScoops = 0;
+    int minFeed = 0;
+    boolean first = true;
+    for (HashSet<Integer> combination : combinationList) {
+      int[] feedStats = new int[V];
+      int numScoops = combination.size();
+      int numFeed = 0;
+      for (int index : combination) {
+        for (int i = 0; i < V; i++) {
+          feedStats[i] += feedArray[index][i];
+          numFeed += feedArray[index][i];
+        }
+      }
+      boolean works = true;
+      for (int i = 0; i < V; i++) {
+        if (feedStats[i] < vitaminArray[i]) {
+          works = false;
+          break;
+        }
+      }
+      if (works == true) {
+        if (first == true) {
+          minStats = feedStats;
+          minScoops = numScoops;
+          minFeed = numFeed;
+          minIndex = combination;
+          first = false;
+        } else {
+          if (minScoops > numScoops) {
+            minStats = feedStats;
+            minScoops = numScoops;
+            minFeed = numFeed;
+            minIndex = combination;
+          } if (minScoops == numScoops && minFeed > numFeed) {
+            minStats = feedStats;
+            minScoops = numScoops;
+            minFeed = numFeed;
+            minIndex = combination;
+          }
+        }
+      }
+    }
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("holstein.out")));
+    pw.print(minScoops);
+    for (int num : minIndex) {
+      pw.print(" " + (num + 1));
+    }
+    pw.println();
+    pw.close();
+  }
+  public static void findCombinations(HashSet<Integer> currentArray, int G) {
+    for (int i = 0; i < G; i++) {
+      HashSet<Integer> copyArray = new HashSet<>(currentArray);
+      counter += currentArray.size();
+      /*for (int j = 0; j < currentArray.size(); j++) {
+        copyArray.add(currentArray.get(j));
+        counter += 1;
+        if (counter % 20000 == 0) {
+          System.out.println(counter);
+        }
+      }*/
+      copyArray.add(i);
+      if (currentArray.size() != copyArray.size()) {
+        //Collections.sort(copyArray);
+        if (!combinationList.contains(copyArray)) {
+          combinationList.add(copyArray);
+          findCombinations(copyArray, G);
+        } 
+      }
+    }
+    /*if (currentArray.size() > 0) {
+      combinationList.add(currentArray);
+    }*/
+  }
+}
