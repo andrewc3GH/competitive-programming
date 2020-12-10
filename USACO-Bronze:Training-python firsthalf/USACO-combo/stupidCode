@@ -1,0 +1,89 @@
+'''
+ID: cruzan1
+LANG: PYTHON3
+TASK: combo
+'''
+
+f = open('combo.in', 'r')
+numDials = int(f.readline().strip())
+farmerLock = f.readline().strip().split()
+masterLock = f.readline().strip().split()
+f.close()
+out = open('combo.out', 'w+')
+for i in range(3):
+  farmerLock[i] = int(farmerLock[i])
+  masterLock[i] = int(masterLock[i])
+print(farmerLock)
+print(masterLock)
+randomLst = []
+overallCounter = 0
+for i in range(numDials):
+  i += 1
+  for j in range(numDials):
+    j += 1
+    for k in range(numDials):
+      counter = 0
+      k += 1
+      iLeft = i + 48
+      iRight = i - 48
+      jLeft = j + 48
+      jRight = j - 48
+      kLeft = k + 48
+      kRight = k - 48
+      masterLocks = True
+      farmerLocks = True
+      if (farmerLock[0] <= (i + 2) and farmerLock[0] >= (i - 2) and farmerLocks == True):
+        counter += 1
+        masterLocks = False
+        farmerLocks = True
+      elif (masterLock[0] <= (i + 2) and masterLock[0] >= (i - 2)) and masterLocks == True:
+        counter += 1
+        masterLocks = True
+        farmerLocks = False
+      elif (farmerLock[0] >= iLeft or farmerLock[0] <= iRight) and farmerLocks == True:
+        counter += 1 
+        masterLocks = False
+        farmerLocks = True
+      elif (masterLock[0] >= iLeft or masterLock[0] <= iRight) and masterLocks == True:
+        counter += 1
+        masterLocks = True
+        farmerLocks = False
+      if (farmerLock[1] <= (j + 2) and farmerLock[1] >= (j - 2) and farmerLocks == True):
+        counter += 1
+        masterLocks = False
+        farmerLocks = True
+      elif (masterLock[1] <= (j + 2) and masterLock[1] >= (j - 2)) and masterLocks == True:
+        counter += 1
+        masterLocks = True
+        farmerLocks = False
+      elif (farmerLock[1] >= jLeft or farmerLock[1] <= jRight) and farmerLocks == True:
+        counter += 1 
+        masterLocks = False
+        farmerLocks = True
+      elif (masterLock[1] >= jLeft or masterLock[1] <= jRight) and masterLocks == True:
+        counter += 1
+        masterLocks = True
+        farmerLocks = False
+      if (farmerLock[2] <= (k + 2) and farmerLock[2] >= (k - 2) and farmerLocks == True):
+        counter += 1
+        masterLocks = False
+        farmerLocks = True
+      elif (masterLock[2] <= (k + 2) and masterLock[2] >= (k - 2)) and masterLocks == True:
+        counter += 1
+        masterLocks = True
+        farmerLocks = False
+      elif (farmerLock[2] >= kLeft or farmerLock[2] <= kRight) and farmerLocks == True:
+        counter += 1 
+        masterLocks = False
+        farmerLocks = True
+      elif (masterLock[2] >= kLeft or masterLock[2] <= kRight) and masterLocks == True:
+        counter += 1
+        masterLocks = True
+        farmerLocks = False
+      if counter == 3: 
+        overallCounter += 1
+        randomLst.append([str(i) + str(j) + str(k)])
+      k -= 1
+    j -= 1
+  i -= 1
+print(len(randomLst))

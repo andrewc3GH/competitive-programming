@@ -1,0 +1,28 @@
+def inPut():
+  f = open('billboard.in', 'r')
+  lawnmowerBoard = f.readline().strip().split()
+  cowfeedBoard = f.readline().strip().split()
+  maxLeft = 0
+  maxRight = 0
+  maxUp = 0
+  maxDown = 0
+  print(lawnmowerBoard)
+  print(cowfeedBoard)
+  if int(lawnmowerBoard[0]) > int(cowfeedBoard[0]):
+    maxLeft = int(cowfeedBoard[0])
+  else:
+    maxLeft = int(lawnmowerBoard[0])
+  if int(lawnmowerBoard[1]) > int(cowfeedBoard[1]):
+    maxDown = int(cowfeedBoard[1])
+  else:
+    maxDown = int(lawnmowerBoard[1])
+  if int(lawnmowerBoard[2]) > int(cowfeedBoard[2]):
+    maxRight = int(lawnmowerBoard[2])
+  else:
+    maxRight = int(cowfeedBoard[2])
+  if int(lawnmowerBoard[3]) > int(cowfeedBoard[3]):
+    maxRight = int(lawnmowerBoard[3])
+  else:
+    maxRight = int(cowfeedBoard[3])
+  for i in range()
+  return

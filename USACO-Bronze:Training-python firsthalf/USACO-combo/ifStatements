@@ -1,0 +1,30 @@
+farLeft1 = i - 2
+      farLeft2 = j - 2
+      farLeft3 = k - 2
+      farRight1 = i + 2
+      farRight2 = j + 2
+      farRight3 = j + 2
+      if i == 0: 
+        farLeft1 = numDials - 2
+      if j == 0: 
+        farLeft2 = numDials - 2
+      if k == 0: 
+        farLeft3 = numDials - 2
+      if i == 1: 
+        farLeft1 = numDials - 1
+      if j == 1: 
+        farLeft2 = numDials - 1
+      if k == 1: 
+        farLeft3 = numDials - 1
+      if i == numDials - 1: 
+        farRight1 = 1
+      if j == numDials - 1: 
+        farRight2 = 1
+      if k == numDials - 1: 
+        farRight3 = 1
+      if i == numDials: 
+        farRight1 = 2
+      if j == numDials: 
+        farRight2 = 2
+      if k == numDials: 
+        farRight3 = 2

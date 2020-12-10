@@ -1,0 +1,16 @@
+  for i in range(len(matchLst)): #if 1 <-- 2 <-- 3 <-- 1
+    if (matchLst[i])[0] == 1:
+      if (matchLst[i])[1] == 3:
+        cow1wins += 1
+      else:
+        pass
+    if (matchLst[i])[0] == 2:
+      if (matchLst[i])[1] == 1:
+        cow1wins += 1
+      else:
+        pass
+    if (matchLst[i])[0] == 3:
+      if (matchLst[i])[1] == 2:
+        cow1wins += 1
+      else:
+        pass

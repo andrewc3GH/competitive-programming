@@ -1,0 +1,75 @@
+
+def calculator(entireArray):
+  totalFlips = 0
+  counter = 0
+  breakcounter = 0
+  for i in range(len(entireArray)):
+    for j in range(len(entireArray)):
+        if (entireArray[i])[j] == '0':
+          counter += 1
+  if counter == ((i + 1) * (j + 1)):
+    return 0
+  else:
+    while True:
+      columntoflip = 0
+      rowofcolumn = 0
+      rowtoflip = 0
+      columnofrow = 0
+      for i in range(len(entireArray)):
+        for j in range(len(entireArray)):
+          print((entireArray[i])[j])
+          print((entireArray[j])[i])
+          print("done")
+          print("i: " + str(i))
+          print("j: " + str(j))
+          if (entireArray[i])[j] == "1":
+            print("call1")
+            columntoflip = j + 1
+            rowofcolumn = i + 1
+          pass
+          if (entireArray[j])[i] == "1":
+            print("call2")
+            rowtoflip = i + 1
+            columnofrow = j + 1
+      print(entireArray)
+      print(columntoflip)
+      print(rowtoflip)
+      if rowtoflip == columntoflip:
+        print("yes1")
+        print(columntoflip)
+        print(rowtoflip)
+        for i in range(rowtoflip):
+          for j in range(columntoflip):
+            if (entireArray[i])[j] == '0':
+              (entireArray[i])[j] = '1'
+            else:
+              (entireArray[i])[j] = '0'
+      elif rowtoflip > columntoflip:
+        print("yes2")
+        for i in range(rowtoflip):
+          for j in range(columnofrow):
+            if (entireArray[i])[j] == '0':
+              (entireArray[i])[j] = '1'
+            else:
+              (entireArray[i])[j] = '0'
+      else:
+        print("yes3")
+        for i in range(columntoflip):
+          for j in range(rowofcolumn):
+            if (entireArray[i])[j] == '0':
+              (entireArray[i])[j] = '1'
+            else:
+              (entireArray[i])[j] = '0'
+      counter = 0
+      for i in range(len(entireArray)):
+        for j in range(len(entireArray)):
+          if (entireArray[i])[j] == '0':
+            counter += 1
+      print(entireArray)
+      totalFlips += 1
+      if counter == ((len(entireArray)) * (len(entireArray))):
+        break
+      breakcounter += 2
+      if breakcounter == 6:
+        break
+    return totalFlips

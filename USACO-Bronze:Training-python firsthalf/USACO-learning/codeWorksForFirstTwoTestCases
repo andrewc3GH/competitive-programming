@@ -1,0 +1,87 @@
+'''
+ID: cruzan1
+LANG: PYTHON3
+TASK: learning
+'''
+
+def inPut():
+  f = open('learning.in', 'r')
+  cowStats = f.readline().strip().split()
+  numCows = int(cowStats[0])
+  startingWeight = int(cowStats[1])
+  endWeight = int(cowStats[2])
+  spottedLst = []
+  plainLst = []
+  orderLst = []
+  overalLst = []
+  for i in range(numCows):
+    currentCowStats = f.readline().strip().split()
+    overalLst.append(currentCowStats[1])
+    if currentCowStats[0] == "S":
+      spottedLst.append(int(currentCowStats[1]))
+    else:
+      plainLst.append(int(currentCowStats[1]))
+  spottedLst.sort()
+  plainLst.sort()
+  indexForPlain = 0
+  indexForSpotted = 0
+  orderLst = []
+  for i in range(len(spottedLst) + len(plainLst)):
+    if indexForSpotted == len(spottedLst):
+      for j in range(len(plainLst) - indexForPlain):
+        orderLst.append("NS")
+      break
+    if indexForPlain == len(plainLst):
+      for j in range(len(spottedLst) - indexForSpotted):
+        orderLst.append("S")
+      break
+    if spottedLst[indexForSpotted] > plainLst[indexForPlain]:
+      orderLst.append("NS")
+      indexForPlain += 1
+    else:
+      orderLst.append("S")
+      indexForSpotted += 1
+  return numCows, startingWeight, endWeight, spottedLst, plainLst, orderLst, overalLst
+
+def calculate(numCows, startingWeight, endWeight, spottedLst, plainLst, orderLst, overalLst):
+  numSpotted = 0
+  numPlain = 0
+  indexSpotted = 0
+  indexPlain = 0
+  indexSpotted = 0
+  if orderLst[0] == "S":
+    numSpotted += spottedLst[0] - startingWeight
+  else:
+    numPlain += plainLst[0] - startingWeight
+  for i in range(len(orderLst)):
+    if i >= len(orderLst) - 1:
+      if orderLst[i] == "S":
+        numSpotted += endWeight - spottedLst[len(spottedLst) - 1] + 1
+      else:
+        numPlain += endWeight - plainLst[len(plainLst) - 1] + 1
+    elif orderLst[i] == "S":
+      numSpotted += 1
+      if orderLst[i + 1] == "S":
+        numSpotted += spottedLst[indexSpotted + 1] - spottedLst[indexSpotted] - 1
+      elif orderLst[i + 1] == "NS":
+        numSpotted += int((plainLst[indexPlain] - spottedLst[indexSpotted] - 1)/2)
+        numPlain += int((plainLst[indexPlain] - spottedLst[indexSpotted] - 1)/2)
+        if (plainLst[indexPlain] - spottedLst[indexSpotted]) % 2 == 0:
+          numSpotted += 1
+      indexSpotted += 1
+    else: 
+      numPlain += 1
+      if orderLst[i + 1] == "NS":
+        numPlain += plainLst[indexPlain + 1] - plainLst[indexPlain] - 1
+      elif orderLst[i + 1] == "S":
+        numPlain += int((spottedLst[indexSpotted] - plainLst[indexPlain] - 1)/2)
+        numSpotted += int((spottedLst[indexSpotted] - plainLst[indexPlain] - 1)/2)
+        if (spottedLst[indexSpotted] - plainLst[indexPlain]) % 2 == 0:
+          numSpotted += 1
+      indexPlain += 1
+  return numSpotted
+
+var = inPut()
+out = open('learning.out', 'w')
+out.write(str(calculate(var[0], var[1], var[2], var[3], var[4], var[5], var[6])))
+out.close()

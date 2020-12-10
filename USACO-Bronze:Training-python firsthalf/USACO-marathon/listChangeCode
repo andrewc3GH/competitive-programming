@@ -1,0 +1,13 @@
+def listChange(numCheckpoints, overalLst):
+  counter = 1
+  for i in range(1, numCheckpoints - 1):
+    tempLst = overalLst
+    currentRemove = overalLst[counter]
+    tempLst.pop(counter)
+    print("tempLst: " + str(tempLst))
+    overalLst.insert(counter, currentRemove)
+    print("overalLst: " + str(overalLst))
+    counter += 1
+  return
+
+listChange(inPut()[0], inPut()[1])

@@ -1,0 +1,37 @@
+allDimensions = {}
+  for i in range(int(lawnmowerBoard[1]), int(lawnmowerBoard[3]) + 1):
+    for j in range(int(lawnmowerBoard[0]), int(lawnmowerBoard[2]) + 1):
+      allDimensions[(j, i)] = "bad"
+  for i in range(int(cowfeedBoard[1]), int(cowfeedBoard[3]) + 1):
+    for j in range(int(cowfeedBoard[0]), int(cowfeedBoard[2]) + 1):
+      allDimensions[(j, i)] = "good"
+  breakFactor = 0
+  for key in allDimensions:
+    if allDimensions[key] == "good":
+      breakFactor += 1
+  if breakFactor == len(allDimensions):
+    return 0
+  for key in allDimensions:  
+    if allDimensions[key] == "bad":
+      maxLeft = key[0]
+      maxRight = key[0]
+      maxDown = key[1]
+      maxUp = key[1]
+      break
+  for key in allDimensions:
+    if allDimensions[key] == "bad":
+      if key[0] < maxLeft:
+        maxLeft = key[0]
+      if key[0] > maxRight:
+        maxRight = key[0]
+      if key[1] < maxDown:
+        maxDown = key[1]
+      if key[1] > maxUp:
+        maxUp = key[1]
+  if maxLeft - maxRight == 0 and maxUp - maxDown == 0:
+    return 1
+  elif maxLeft - maxRight == 0:
+    return abs((maxDown) - (maxUp))
+  elif maxDown - maxUp == 0:
+    return abs((maxLeft) - (maxRight))
+  return abs((maxLeft) - (maxRight)) * abs((maxDown) - (maxUp))

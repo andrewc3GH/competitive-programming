@@ -1,0 +1,31 @@
+def calculate(baleLst):
+  maxBalesHit = 0
+  print(baleLst)
+  for i in range(len(baleLst)):
+    minStarting = baleLst[i]
+    maxStarting = baleLst[i]
+    blastRadius = 1
+    balesHit = 0
+    while True:
+      moreBales = 0
+      maxRange = blastRadius + maxStarting
+      minRange = minStarting - blastRadius
+      for j in range(len(baleLst)):
+        print("first: " + str(baleLst[i]))
+        if minRange <= baleLst[j] <= maxRange and baleLst[j] != baleLst[i]:
+          moreBales += 1
+          print("second: " + str(baleLst[j]))
+          if baleLst[j] > maxStarting:
+            maxStarting = baleLst[j]
+          elif baleLst[j] < minStarting:
+            minStarting = baleLst[j]
+      break
+      if moreBales == 0:
+        break
+      else:
+        blastRadius += 1
+        balesHit += moreBales
+    if balesHit > maxBalesHit:
+      maxBalesHit = balesHit
+
+  return

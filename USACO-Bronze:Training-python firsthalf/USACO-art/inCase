@@ -1,0 +1,19 @@
+def findOutliers(lstOfStrs, dimensionDict):
+  print(lstOfStrs)
+  print(dimensionDict)
+  counter = 0
+  for key in dimensionDict:
+    for otherKey in dimensionDict:
+      keyOccurs = False
+      if key != otherKey:
+        startCol = dimensionDict[otherKey][2]
+        startRow = dimensionDict[otherKey][3]
+        endCol = dimensionDict[otherKey][0]
+        endRow = dimensionDict[otherKey][1]
+        for i in range(startRow, endRow + 1):
+          for j in range(startCol, endCol + 1):
+            if lstOfStrs[i][j] == key:
+              keyOccurs = True
+    if keyOccurs == False:
+      counter += 1
+  return counter

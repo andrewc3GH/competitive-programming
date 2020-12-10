@@ -1,0 +1,5 @@
+  currentArea = abs(int(lawnmowerBoard[0]) - (int(lawnmowerBoard[2]) + 1)) * abs(int(lawnmowerBoard[1]) - (int(lawnmowerBoard[3]) + 1))
+   for i in range(int(lawnmowerBoard[1]), int(lawnmowerBoard[3]) + 1):
+    for j in range(int(lawnmowerBoard[0]), int(lawnmowerBoard[2]) + 1):
+      if int(cowfeedBoard[0]) < i < int(cowfeedBoard[2]) and int(cowfeedBoard[1]) < j < int(cowfeedBoard[3]):
+        currentArea -= 1

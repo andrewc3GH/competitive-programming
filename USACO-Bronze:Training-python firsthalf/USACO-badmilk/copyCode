@@ -1,0 +1,41 @@
+def calculate(drinkingLst, sickLst):
+  timeOfSickness = {}
+  callLst = []
+  suspiciousMilks = []
+  realSuspiciousMilks = []
+  for i in range(len(sickLst)):
+    timeOfSickness[sickLst[i][0]] = sickLst[i][1]
+  for i in range(len(drinkingLst)):
+    addMilks = {}
+    if drinkingLst[i][0] in timeOfSickness and drinkingLst[i][2] < timeOfSickness[drinkingLst[i][0]]:
+      if drinkingLst[i][1] in suspiciousMilks:
+        pass
+      else:
+        addMilks[drinkingLst[i][0]] = drinkingLst[i][1]
+        suspiciousMilks.append(addMilks)
+        callLst.append(drinkingLst[i][0])
+  count = 1
+  for j in range(len(suspiciousMilks)):
+    counter = 0
+    for i in range(len(suspiciousMilks)):
+      if suspiciousMilks[i][callLst[i]] == count:
+        counter += 1
+        if counter == len(timeOfSickness):
+          realSuspiciousMilks.append(suspiciousMilks[i][callLst[i]])
+      else:
+        pass
+    count += 1
+  maxHelp = 0
+  for j in range(len(drinkingLst)):
+    needToHelp = []
+    for i in range(len(drinkingLst)):
+      if drinkingLst[i][1] in realSuspiciousMilks:
+        if drinkingLst[i][0] in needToHelp:
+          pass
+        else:
+          needToHelp.append(drinkingLst[i][0])
+      if len(needToHelp) > maxHelp:
+        maxHelp = len(needToHelp)
+      else:
+        pass
+  return maxHelp

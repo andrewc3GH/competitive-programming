@@ -1,0 +1,104 @@
+'''
+ID: cruzan1
+LANG: PYTHON3
+TASK: crosswords
+'''
+
+def inPut():
+  f = open('crosswords.in', 'r')
+  var = f.readline().strip().split()
+  verticalRows = int(var[0])
+  horizontalColumns = int(var[1])
+  lstOfLsts = []
+  for i in range(verticalRows):
+    row = f.readline().strip()
+    lstOfLsts.append(list(row))
+  return verticalRows, horizontalColumns, lstOfLsts
+
+def calculate(verticalRows, horizontalColumns, lstOfLsts):
+  totalWords = 0
+  verticalCheckLst = []
+  horizontalCheckLst = []
+  startingWordLst = []
+  for i in range(1, verticalRows + 1):
+    for j in range(1, horizontalColumns + 1):
+      firstCheck = []
+      secondCheck = []
+      firstCheck = verticalCheck(lstOfLsts, [i, j], totalWords, verticalCheckLst, startingWordLst)
+      secondCheck = horizontalCheck(lstOfLsts, [i, j], totalWords, horizontalCheckLst, startingWordLst)
+      totalWords += int(firstCheck[0]) + int(secondCheck[0])
+      for k in range(len(firstCheck[1])):
+        verticalCheckLst.append(firstCheck[1][k])
+      for l in range(len(secondCheck[1])):
+        horizontalCheckLst.append(secondCheck[1][j])
+      if firstCheck[2] not in startingWordLst and len(firstCheck[2]) > 0:
+        startingWordLst.append(firstCheck[2])
+      elif secondCheck[2] not in startingWordLst and len(secondCheck[2]) > 0:
+        startingWordLst.append(secondCheck[2])
+  totalWords = 0
+  for i in range(len(startingWordLst)):
+    if len(startingWordLst[i]) == 0:
+      pass
+    else:
+      totalWords += 1
+  print(horizontalCheckLst)
+  return totalWords, startingWordLst
+
+def verticalCheck(lstOfLsts, currentCoordinates, totalWords, verticalCheckLst, startingWordLst):
+  newVerticalCheckLst = []
+  newStartingWordLst = []
+  newTotalWords = 0
+  if currentCoordinates not in verticalCheckLst and currentCoordinates not in startingWordLst and lstOfLsts[currentCoordinates[0] - 1][currentCoordinates[1] - 1] == ".":
+    goUpByIndex = 1
+    currentWords = []
+    currentWords.append(currentCoordinates)
+    while True:
+      if [currentCoordinates[0], currentCoordinates[1] + goUpByIndex] not in verticalCheckLst and lstOfLsts[currentCoordinates[0] - 2 + goUpByIndex][currentCoordinates[1] - 1] == ".":
+        currentLst = []
+        currentLst.append(currentCoordinates[0] + goUpByIndex)
+        currentLst.append(currentCoordinates[1])
+        currentWords.append(currentLst)
+        goUpByIndex += 1
+      else:
+        break
+      if goUpByIndex + currentCoordinates[0] >= len(lstOfLsts) + 2:
+        break
+    if len(currentWords) >= 4:
+      newTotalWords += 1
+      for i in range(len(currentWords)):
+        newVerticalCheckLst.append(currentWords[i])
+      newStartingWordLst.append(currentWords[0])
+  return newTotalWords, newVerticalCheckLst, newStartingWordLst
+
+def horizontalCheck(lstOfLsts, currentCoordinates, totalWords, horizontalCheckLst, startingWordLst):
+  newHorizontalCheckLst = []
+  newStartingWordLst = []
+  newTotalWords = 0
+  if currentCoordinates not in horizontalCheckLst and currentCoordinates not in startingWordLst and lstOfLsts[currentCoordinates[0] - 1][currentCoordinates[1] - 1] == ".":
+    goUpByIndex = 1
+    currentWords = []
+    currentWords.append(currentCoordinates)
+    while True:
+      if [currentCoordinates[0], currentCoordinates[1] - 1 + goUpByIndex] not in horizontalCheckLst and lstOfLsts[currentCoordinates[0] - 1][currentCoordinates[1] - 2 + goUpByIndex] == ".":
+        currentLst = []
+        currentLst.append(currentCoordinates[0])
+        currentLst.append(currentCoordinates[1] + goUpByIndex)
+        currentWords.append(currentLst)
+        goUpByIndex += 1
+      else:
+        break
+      if goUpByIndex + currentCoordinates[1] >= len(lstOfLsts[0]) + 2:
+        break
+    if len(currentWords) >= 4:
+      newTotalWords += 1
+      for i in range(len(currentWords)):
+        newHorizontalCheckLst.append(currentWords[i])
+      newStartingWordLst.append(currentWords[0])
+  return newTotalWords, newHorizontalCheckLst, newStartingWordLst
+
+out = open('crosswords.out', 'w')
+var = (calculate(inPut()[0], inPut()[1], inPut()[2]))
+out.write(str(var[0]) + '\n')
+for i in range(len(var[1])):
+    out.write(str(var[1][i][0][0]) + " " + str(var[1][i][0][1]) + '\n')
+out.close()

@@ -1,0 +1,6 @@
+    print("minCost = " + str(minCost))
+    print("unitsBought = " + str(farmersDict[minCost]))
+    print("unitsOwned = " + str(unitsOwned))
+    print("purchaseCost = " + str(farmersDict[minCost] * minCost))
+    print("totalCost = " + str(cost))
+    print("")

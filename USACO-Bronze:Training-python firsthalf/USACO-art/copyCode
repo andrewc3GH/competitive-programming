@@ -1,0 +1,39 @@
+#go through every color space in the grid, if it has two sides touching a different color (that is the same(ex: red space surrounded by two green spaces)), then fill the space in the middle with the color of the surrounding spaces.
+#record which colors are changed, the colors that are not ever changed are the ones that could have been first to be painted
+
+colorsInPainting = set()
+  changedColors = set()
+  for i in range(numLen):
+    for j in range(numLen):
+      colorsAround = []
+      if lstOfStrs[i][j] != "0":
+        colorsInPainting.add(lstOfStrs[i][j])
+      currentValue = lstOfStrs[i][j]
+      if i != numLen - 1:
+        colorsAround.append(lstOfStrs[i + 1][j])
+      if i != 0:
+        colorsAround.append(lstOfStrs[i - 1][j])
+      if j != numLen - 1:
+        colorsAround.append(lstOfStrs[i][j + 1])
+      if j != 0:
+        colorsAround.append(lstOfStrs[i][j - 1])
+      letterCount = {}
+      paintOver = ""
+      for k in range(len(colorsAround)):
+        letterCount[colorsAround[k]] = 0
+      for l in range(len(colorsAround)):
+        letterCount[colorsAround[k]] += 1
+      counter = 0
+      paint = False
+      print(colorsAround)
+      print(str(i), str(j))
+      for m in letterCount:
+        if letterCount[m] >= 2:
+          paintOver = m
+          if paintOver != currentValue:
+            paint = True
+          break
+        counter += 1
+      if paint == True:
+        lstOfStrs[i][j].replace(currentValue, paintOver)
+        changedColors.add(currentValue)

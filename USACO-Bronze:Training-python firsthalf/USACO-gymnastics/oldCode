@@ -1,0 +1,77 @@
+def inPut():
+  f = open('gymnastics.in', 'r')
+  var = f.readline().strip().split()
+  practiceSessions = int(var[0])
+  numCows = int(var[1])
+  totalLst = []
+  for i in range(practiceSessions):
+    individualLst = []
+    rowCows = f.readline().strip().split()
+    for j in range(numCows):
+      individualLst.append(rowCows[j])
+    totalLst.append(individualLst)
+  return totalLst, numCows, practiceSessions
+
+def calculate(totalLst, numCows, practiceSessions):
+  print(totalLst)
+  finalLst = []
+  #contains all of the numbers a number is ahead of at every practice session
+  #later, check if each unique number in the lst is equal to numPractices to find consistent pairs
+  for lst in totalLst:
+    dictOfLst = {}
+    for i in range(len(lst)):
+      currentLst = []
+      for j in lst[(i + 1):]:
+        currentLst.append(j)
+      if len(currentLst) > 0:
+        dictOfLst[lst[i]] = currentLst
+      else:
+        dictOfLst[lst[i]] = ""
+    finalLst.append(dictOfLst)
+
+  print(finalLst)
+
+  matchCounter = 0
+  for i in range(1, numCows + 1):
+    currentLstIn = []
+    keepOnLst = []
+    for k in range(1, numCows + 1):
+      currentLstIn.append(str(k))
+    for dIct in finalLst:
+      print(dIct[str(i)])
+      if len(dIct[str(i)]) == 0:
+        pass
+      else:
+        keepOnLst.append(str(i))
+    print(keepOnLst)
+    print(currentLstIn)
+    print("Aaa")
+    numberSpread = {}
+    for number in currentLstIn:
+      numberSpread[number] = 0
+    keepOnLst.sort()
+    print(keepOnLst)
+    currentNum = keepOnLst[0]
+    numberCount = 0
+    for aa in range(len(keepOnLst)):
+      if keepOnLst[aa] == currentNum:
+        pass
+      else:
+        numberCount = 0
+        if aa < len(keepOnLst) + 1:
+          currentNum = keepOnLst[aa + 1]
+      numberCount += 1
+      numberSpread[currentNum] = numberCount
+      
+    for value in numberSpread:
+      if numberSpread[value] == practiceSessions:
+        pass
+      if numberSpread[value] < practiceSessions:
+        currentLstIn.remove(value)
+    for l in range(len(currentLstIn)):
+      matchCounter += 1
+  return matchCounter
+
+out = open('gymnastics.out', 'w')
+out.write(str(calculate(inPut()[0], inPut()[1], inPut()[2])) + '\n')
+out.close()
