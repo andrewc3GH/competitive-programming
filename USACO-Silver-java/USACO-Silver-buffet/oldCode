@@ -1,0 +1,19 @@
+int optimalBalance = 0;
+for (int i = 0; i < N; i++) {
+  int startIndex = qualityArray[i][1];
+  int currentBalance = 0;
+  int maxBalance = 0;
+  for (int j = i; j < N; j++) {
+    currentBalance += qualityArray[j][0];
+    if (j != N - 1) {
+      currentBalance -= neighborDistance.get(qualityArray[j][1]).get(qualityArray[j + 1][1]) * E;
+    }
+    if (currentBalance > maxBalance) {
+      maxBalance = currentBalance;
+    }
+  }
+  
+  if (maxBalance > optimalBalance) {
+    optimalBalance = maxBalance;
+  }
+}

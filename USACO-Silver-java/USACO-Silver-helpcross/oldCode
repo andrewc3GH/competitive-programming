@@ -1,0 +1,77 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("helpcross.in"));
+    int numChickens = s.nextInt();
+    int numCows = s.nextInt();
+    int[] chickenArray = new int[numChickens];
+    for (int i = 0; i < numChickens; i++) {
+      chickenArray[i] = s.nextInt();
+    }
+    int[][] cowArray = new int[numCows][2];
+    for (int i = 0; i < numCows; i++) {
+      cowArray[i][0] = s.nextInt();
+      cowArray[i][1] = s.nextInt();
+    }
+
+    HashMap<Integer, ArrayList<int[]>> rangeMap = new HashMap<Integer, ArrayList<int[]>>();
+    HashMap<int[], ArrayList<Integer>> cowMap = new HashMap<int[], ArrayList<Integer>>();
+    for(int i = 0; i < numChickens; i++) {
+      ArrayList<int[]> arrayLstTemp = new ArrayList<int[]>();
+      rangeMap.put(chickenArray[i], arrayLstTemp);
+    }
+    for(int i = 0; i < numCows; i++) {
+      ArrayList<Integer> arrayLstTemp = new ArrayList<Integer>();
+      cowMap.put(cowArray[i], arrayLstTemp);
+    }
+    for (int i = 0; i < numChickens; i++) {
+      for (int j = 0; j < numCows; j++) {
+        if (cowArray[j][0] <= chickenArray[i] && cowArray[j][1] >= chickenArray[i]) {
+          rangeMap.get(chickenArray[i]).add(cowArray[j]);
+          cowMap.get(cowArray[j]).add(chickenArray[i]);
+        }
+      }
+    }
+    System.out.println(cowMap);
+
+    HashMap<Integer, ArrayList<Integer>> sizeMap = new HashMap<Integer, ArrayList<Integer>>();
+    for (int i : rangeMap.keySet()) {
+      if (sizeMap.containsKey(rangeMap.get(i).size())) {
+        sizeMap.get(rangeMap.get(i).size()).add(i);
+      } else {
+        ArrayList<Integer> arrayLstTemp = new ArrayList<Integer>();
+        arrayLstTemp.add(i);
+        sizeMap.put(rangeMap.get(i).size(), arrayLstTemp);
+      }
+    }
+    System.out.println(sizeMap);
+    HashSet<int[]> taken = new HashSet<int[]>();
+    int numPairs = 0;
+    for (int i : sizeMap.keySet()) {
+      for (int j = 0; j < sizeMap.get(i).size(); j++) {
+        int minSize = 100000000;
+        int[] compare = new int[2];
+        int[] current = new int[2];
+        for (int[] k : rangeMap.get(sizeMap.get(i).get(j))) {
+          if (!taken.contains(k)) {
+            System.out.println(cowMap.get(k));
+            if (cowMap.get(k).size() < minSize) {
+              current = k;
+              minSize = cowMap.get(k).size();
+            }
+          }
+        }
+        if (!Arrays.toString(compare).equals(Arrays.toString(current))) {
+          taken.add(current);
+          numPairs += 1;
+          System.out.println(Arrays.toString(current) + " here");
+        }
+      }
+    }
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("helpcross.out")));
+    pw.println(numPairs);
+    pw.close();
+  }
+}

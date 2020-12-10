@@ -1,0 +1,68 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) throws IOException { 
+    Scanner s = new Scanner(new File("snowboots.in"));
+    int N = s.nextInt();
+    int B = s.nextInt();
+    int[] snowArray = new int[N];
+    for (int i = 0; i < N; i++) {
+      snowArray[i] = s.nextInt();
+    }
+    //System.out.println(Arrays.toString(snowArray));
+
+    int[][] bootArray = new int[B][2];
+    for (int i = 0; i < B; i++) {
+      bootArray[i][0] = s.nextInt();
+      bootArray[i][1] = s.nextInt();
+    }
+
+    //[0] = size, [1] = step length
+
+    int snowIndex = 0;
+    int bootIndex = 0;
+    int maxSnow = 0;
+    while (bootIndex < bootArray.length && snowIndex < snowArray.length) {
+      if (bootArray[bootIndex][0] >= snowArray[snowIndex]) {
+        boolean switched = false;
+        boolean over = false;
+        for (int i = snowIndex + 1; i < bootArray[bootIndex][1] + snowIndex + 1; i++) {
+          if (i < N && snowArray[i] <= bootArray[bootIndex][0]) {
+            snowIndex = i;
+            if (snowIndex > maxSnow) {
+              maxSnow = snowIndex;
+            }
+            switched = true;
+          } else if (i >= N - 1) {
+            over = true;
+            break;
+          }
+        }
+        if (over == true) {
+          break;
+        }
+        if (switched == false) {
+          bootIndex += 1;
+          //int keepTrack = 0;
+          if (maxSnow > snowIndex) {
+              snowIndex = maxSnow;
+            }
+          for (int i = 0; i <= maxSnow; i++) {
+            if (i < N && bootArray[bootIndex][0] >= snowArray[i]) {
+              snowIndex = i;
+            }
+          }
+        } 
+      } else {
+        bootIndex += 1;
+      }
+      if (snowIndex == snowArray.length - 1) {
+        break;
+      }
+    }
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("snowboots.out")));
+    pw.println(bootIndex);
+    pw.close();
+  }
+}

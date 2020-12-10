@@ -1,0 +1,112 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("clocktree.in"));
+    int N = s.nextInt();
+    int[] array = new int[N];
+    ArrayList<Integer> arrayList = new ArrayList<>();
+    for (int i = 0; i < N; i++) {
+      array[i] = s.nextInt();
+      arrayList.add(array[i]);
+    }
+    HashMap<Integer, ArrayList<Integer>> connectionMap = new HashMap<>();
+    for (int i = 0; i < N; i++) {
+      connectionMap.put(i, new ArrayList<>());
+    }
+    for (int i = 0; i < N - 1; i++) {
+      int a = s.nextInt() - 1;
+      int b = s.nextInt() - 1;
+      connectionMap.get(a).add(b);
+      connectionMap.get(b).add(a);
+    }
+    System.out.println(connectionMap);
+
+    HashMap<Integer, ArrayList<Integer>> connectionMapCopy = new HashMap<>();
+    for (int j = 0; j < N; j++) {
+      connectionMapCopy.put(j, new ArrayList<>());
+    }
+    for (int j = 0; j < N; j++) {
+      for (int num : connectionMap.get(j)) {
+        connectionMapCopy.get(j).add(num);
+      }
+    }
+
+    int startingNum = -1;
+    boolean breakTime = false;
+    while (!breakTime) {
+      for (int key : connectionMap.keySet()) {
+        if (array[key] != 12 && connectionMap.get(key).size() == 1) {
+          if (startingNum == -1) {
+            startingNum = connectionMap.get(key).get(0);
+          }
+          array[connectionMap.get(key).get(0)]+= Math.abs((12 - array[key]));
+          array[key] = 12;
+
+          connectionMap.get(connectionMap.get(key).get(0)).remove(new Integer(key));
+
+          connectionMap.get(key).remove(0);
+          
+          breakTime = false;
+          break; 
+        }
+        breakTime = true;
+      }
+    } 
+    System.out.println(startingNum);
+    ArrayList<Integer> stack = new ArrayList<>();
+    stack.add(startingNum);
+    HashSet<Integer> visited = new HashSet<>();
+    int stackIndex = 0;
+    visited.add(startingNum);
+    int counter = 1;
+    int count = 1;
+    while (stackIndex < stack.size()) {
+      int currentNum = stack.get(stackIndex);
+      stackIndex += 1;
+      for (int neighbor : connectionMapCopy.get(currentNum)) {
+        if (!visited.contains(neighbor)) {
+          visited.add(neighbor);
+          stack.add(neighbor);
+        }
+      }
+      if (currentNum == startingNum) {
+        count = stack.size() - stackIndex;
+      }
+      if (count == 0) {
+        counter += stack.size() - stackIndex;
+        count = stack.size() - stackIndex;
+      }
+      count -= 1;
+    }
+    System.out.println(counter);
+  }
+}
+    
+
+/*
+clocktree:
+test cases
+degree of each node (number of neighbors)
+
+10 - 11 - 11
+| 
+11 - 11
+
+12 - 11 - 12
+
+10 - 9 - 9 - 10
+
+
+*/
+
+
+
+/*
+go through every single node (use it as a start point)
+search and find all "leaf" nodes and "cancel" them out (make it equal to 12 and then "delete" them from the tree)
+if the last two nodes are equal to each other or are different by 1, then the starting node works
+nodes that are adjacent to a starting node will not work
+hint: if a node works, every node that is distanced from it by a multiple of 2 (2, 4, 6, etc.) will also work, every node that is distanced from it by a odd number (1, 3, 5, 7, etc.) will not work (graph algorithm)
+*/

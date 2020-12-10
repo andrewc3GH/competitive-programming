@@ -1,0 +1,132 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("gates.in"));
+    int N = s.nextInt();
+    String str = s.next();
+    int farthestLeft = 1;
+    int farthestDown = 1;
+    int left = 0;
+    int down = 0;
+    for (int i = 0; i < N; i++) {
+      String direction = String.valueOf(str.charAt(i));
+      if (direction.equals("N")) {
+        down -= 1;
+      } else if (direction.equals("S")) {
+        down += 1;
+      } else if (direction.equals("W")) {
+        left += 1;
+      } else if (direction.equals("E")) {
+        left -= 1;
+      }
+      farthestLeft = Math.max(farthestLeft, left);
+      farthestDown = Math.max(farthestDown, down);
+    }
+
+    //left, top, right, down
+    boolean[][][] array = new boolean[1002][1002][4];
+
+    int[] coor = new int[2];
+    coor[0] = farthestLeft;
+    coor[1] = farthestDown;
+    
+    boolean up = false;
+    for (int i = 0; i < N; i++) {
+      String direction = String.valueOf(str.charAt(i));
+      if (direction.equals("N")) {
+        //right side
+        array[coor[0] + farthestLeft][coor[1] + farthestDown][0] = true;
+        //left side
+        array[coor[0] - 1 + farthestLeft][coor[1] + farthestDown][2] = true;
+        //go up
+        coor[1] += 1;
+      } else if (direction.equals("S")) {
+        //right side
+        array[coor[0] + farthestLeft][coor[1] + farthestDown - 1][0] = true;
+        //left side
+        array[coor[0] - 1 + farthestLeft][coor[1] + farthestDown - 1][2] = true;
+        //go down
+        coor[1] -= 1;
+      } else if (direction.equals("W")) {
+        //bottom side
+        array[coor[0] + farthestLeft - 1][coor[1] + farthestDown][1] = true;
+        //top side
+        array[coor[0] - 1 + farthestLeft][coor[1] + farthestDown - 1][3] = true;
+        coor[0] -= 1;
+        //go left
+      } else if (direction.equals("E")) {
+        //bottom side
+        array[coor[0] + farthestLeft][coor[1] + farthestDown][1] = true;
+        //top side
+        array[coor[0] + farthestLeft][coor[1] + farthestDown - 1][3] = true;
+        //go right
+        coor[0] += 1;
+      }
+    }
+    /*
+    for (boolean[][] item : array) {
+      for (boolean[] it : item) {
+        System.out.println(Arrays.toString(it));
+      }
+    }
+    */
+
+    int counter = 0;
+    //flood fill
+    boolean[][] visited = new boolean[7][7];
+    for (int i = 0; i < 7; i++) {
+      for (int j = 0; j < 7; j++) {
+        int[] newCoor = new int[]{i, j};
+        if (visited[newCoor[0]][newCoor[1]] == false) {
+          counter += 1;
+          ArrayList<int[]> stack = new ArrayList<>();
+          stack.add(newCoor);
+          int stackIndex = 0;
+          while (stack.size() > stackIndex) {
+            int[] current = stack.get(stackIndex);
+            stackIndex += 1;
+            visited[current[0]][current[1]] = true;
+            for (int k = 0; k < 4; k++) {
+              int[] neighbor = new int[]{current[0], current[1]};
+              boolean works = true;
+              if (k == 0) {
+                //left
+                neighbor[0] -= 1; 
+                if (array[current[0]][current[1]][0] == true) {
+                  works = false;
+                }
+              } else if (k == 1) {
+                //down
+                neighbor[1] -= 1;
+                if (array[current[0]][current[1]][1] == true) {
+                  works = false;
+                }
+              } else if (k == 2) {
+                //right
+                neighbor[0] += 1;
+                if (array[current[0]][current[1]][2] == true) {
+                  works = false;
+                }
+              } else if (k == 3) {
+                //up
+                neighbor[1] += 1;
+                if (array[current[0]][current[1]][3] == true) {
+                  works = false;
+                }
+              }
+              if (works && neighbor[0] > -1 && neighbor[1] > -1 && neighbor[0] < 7 && neighbor[1] < 7 && visited[neighbor[0]][neighbor[1]] == false) {
+                stack.add(neighbor);
+                visited[neighbor[0]][neighbor[1]] = true;
+              }
+            }
+          }
+        }
+      }
+    }
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("gates.out")));
+    pw.println(counter - 1);
+    pw.close();
+  }
+}

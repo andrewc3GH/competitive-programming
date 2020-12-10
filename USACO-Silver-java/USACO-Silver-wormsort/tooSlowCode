@@ -1,0 +1,116 @@
+import java.io.*;
+import java.util.*;
+//search to make sure every cow is connected first
+
+//store weight info in initial graph
+//in search, check if neighbor weight is valid first
+//dont remake hashmap every time
+//use boolean array for visited
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("wormsort.in"));
+    int N = s.nextInt();
+    int M = s.nextInt();
+    int[] cowArray = new int[N];
+    HashMap<Integer, ArrayList<Integer>> wormholeMap = new HashMap<>();
+    for (int i = 0; i < N; i++) {
+      int newInt = s.nextInt();
+      cowArray[i] = newInt;
+      wormholeMap.put(newInt, new ArrayList<>());
+    }
+    HashSet<Integer> wrongLocation = new HashSet<>();
+    for (int i = 0; i < N; i++) {
+      if (cowArray[i] != i + 1) {
+        wrongLocation.add(cowArray[i]);
+      }
+    }
+    int[][] wormholeArray = new int[M][3];
+    for (int j = 0; j < M; j++) {
+      int[] temp = new int[3];
+      temp[0] = s.nextInt();
+      temp[1] = s.nextInt();
+      temp[2] = s.nextInt();
+      wormholeArray[j] = temp;
+      wormholeMap.get(temp[0]).add(temp[1]);
+      wormholeMap.get(temp[1]).add(temp[0]);
+    }
+
+    int[][] sortedArray = new int[M][3];
+    for (int i = 0; i < M; i++) {
+      sortedArray[i] = wormholeArray[i];
+    }
+
+    Arrays.sort(sortedArray, (int[] a, int[] b) -> {
+      return a[2] - b[2];
+    });
+    
+    int repeatNum = -1;
+    int currentNumber = -1;
+    int minRange = 0;
+    int maxRange = sortedArray[M - 1][2] + 1;
+    while (true) {
+      currentNumber = findIndex(minRange, maxRange);
+      ArrayList<int[]> wormholeCopy = new ArrayList<>();
+      HashMap<Integer, ArrayList<Integer>> wormholeMapCopy = new HashMap<>();
+
+      for (int i = 0; i < N; i++) {
+        int newInt = cowArray[i];
+        wormholeMapCopy.put(newInt, new ArrayList<>());
+      }
+      
+      for (int i = 0; i < M; i++) {
+        int[] wormhole = wormholeArray[i];
+        if (wormhole[2] >= currentNumber) {
+          wormholeCopy.add(wormhole);
+          wormholeMapCopy.get(wormhole[0]).add(wormhole[1]);
+          wormholeMapCopy.get(wormhole[1]).add(wormhole[0]);
+        }
+      }
+      System.out.println(wormholeMapCopy);
+
+      HashSet<Integer> visited = new HashSet<>();
+      //search here
+      Stack<Integer> stack = new Stack<>();
+      if (wormholeCopy.size() > 0) {
+        stack.push(wormholeCopy.get(0)[0]);
+      }
+      //System.out.println(currentNumber + " " + wormholeMapCopy);
+      HashSet<Integer> inQueue = new HashSet<>();
+      while (stack.size() > 0) {
+        int currentNum = stack.pop();
+        visited.add(currentNum);
+        for (int neighbor : wormholeMapCopy.get(currentNum)) {
+          if (!visited.contains(neighbor) && !inQueue.contains(neighbor)) {
+            stack.push(neighbor);
+            inQueue.add(neighbor);
+          }
+        }
+      }
+      boolean works = true;
+      for (int item : wrongLocation) {
+        if (!visited.contains(item)) {
+          works = false;
+          break;
+        }
+      }
+      //System.out.println(currentNumber + " " + visited + " " + wrongLocation + " " + wormholeMapCopy);
+      if (works == true) {
+        minRange = currentNumber;
+      } else {
+        maxRange = currentNumber;
+      }
+      if (repeatNum == currentNumber) {
+        break;
+      }
+      repeatNum = currentNumber;
+    }
+
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("wormsort.out")));
+    pw.println(repeatNum);
+    pw.close();
+  }
+
+  public static int findIndex(int min, int max) {
+    return (min + max)/2;
+  }
+}

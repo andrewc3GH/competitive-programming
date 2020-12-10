@@ -1,0 +1,65 @@
+import java.io.*;
+import java.util.*;
+//binary search to find berry value for each basket
+//loop through trees and add the berry value to each basket
+//if there are more baskets than trees with the minimum berry value, add berries from the trees with the most berries
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("berries.in"));
+    int N = s.nextInt();
+    int K = s.nextInt();
+    ArrayList<Integer> berryArray = new ArrayList<>();
+    for (int i = 0; i < N; i++) {
+      berryArray.add(s.nextInt());
+    }
+    int currentMax = 0;
+    while (true) {
+      Collections.sort(berryArray);
+      Collections.reverse(berryArray);
+      System.out.println(berryArray + " " + (calculate(berryArray, K) > currentMax) + " " + currentMax);
+      if (berryArray.size() > K/2 && calculate(berryArray, K) > currentMax) {
+        currentMax = calculate(berryArray, K);
+      } else if (berryArray.size() > K/2) {
+        break;
+      }
+      int currentNum = berryArray.get(0);
+      if (berryArray.get(0) % 2 == 0) {
+        berryArray.remove(0);
+        berryArray.add(currentNum/2);
+        berryArray.add(currentNum/2);
+      } else {
+        berryArray.remove(0);
+        berryArray.add(currentNum/2);
+        berryArray.add(currentNum/2 + 1);
+      }
+    }
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("berries.out")));
+    pw.println(currentMax);
+    pw.close();
+  }
+  /*
+  public static int findDivisible(int a) {
+    for (int i = 2; i < Math.sqrt(a); i++) {
+      if (a % i == 0) {
+        return i;
+      }
+    }
+    return -1;
+  }
+  */
+  public static int calculate(ArrayList<Integer> berryArray, int K) {
+    int counter = 0;
+    for (int i = K/2; i < K; i++) {
+      if (i >= berryArray.size()) {
+        break;
+      }
+      counter += berryArray.get(i);
+    }/*
+    if (counter == 0) {
+      for (int i = berryArray.size()/2; i < berryArray.size(); i++) {
+        counter += berryArray.get(i);
+      }
+    }*/
+    return counter;
+  }
+}

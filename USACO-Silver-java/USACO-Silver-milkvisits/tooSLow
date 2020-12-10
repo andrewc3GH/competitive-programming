@@ -1,0 +1,147 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("milkvisits.in"));
+    int N = s.nextInt();
+    int M = s.nextInt();
+    HashMap<Integer, ArrayList<Integer>> connectionMap = new HashMap<>();
+    for (int i = 0; i < N; i++) {
+      connectionMap.put(i + 1, new ArrayList<Integer>());
+    }
+
+    String cows = s.next();
+
+    for (int i = 0; i < N - 1; i++) {
+      int first = s.nextInt();
+      int second = s.nextInt();
+      connectionMap.get(first).add(second);
+      connectionMap.get(second).add(first);
+    }
+    //System.out.println(connectionMap);
+
+    int end = 0;
+    for (int i = 0; i < N; i++) {
+      if (connectionMap.get(i + 1).size() == 1) {
+        end = i + 1;
+        break;
+      }
+    }
+    //System.out.println(end);
+
+    ArrayList<HashSet<Integer>> HLst = new ArrayList<>();
+    ArrayList<HashSet<Integer>> GLst = new ArrayList<>();
+
+    Stack otherStack = new Stack();
+    Stack currentStack = new Stack();
+    currentStack.push(end);
+    String currentLetter = String.valueOf(cows.charAt(end - 1));
+    HashSet<Integer> visited = new HashSet<>();
+    HashSet<Integer> currentLst = new HashSet<>();
+    while (true) {
+      int currentNum = 0;
+      if (currentStack.size() > 0) {
+        currentNum = (int)currentStack.pop();
+        currentLst.add(currentNum);
+      } else {
+        currentNum = (int)otherStack.pop();
+        HashSet<Integer> copy = new HashSet<>(currentLst);
+        if (currentLetter.equals("G")) {
+          GLst.add(copy);
+        } else {
+          HLst.add(copy);
+        }
+        currentLst = new HashSet<>();
+        currentLetter = String.valueOf(cows.charAt(currentNum - 1));
+        /*while (otherStack.size() > 0) {
+          currentStack.push(otherStack.pop());
+        }*/
+        currentLst.add(currentNum);
+      }
+      visited.add(currentNum);
+      
+      for (int neighbor : connectionMap.get(currentNum)) {
+        if (!visited.contains(neighbor)) {
+          if (String.valueOf(cows.charAt(neighbor - 1)).equals(currentLetter)) {
+            currentStack.push(neighbor);
+          } else {
+            otherStack.push(neighbor);
+          }
+        }
+      }
+      if (otherStack.size() == 0 && currentStack.size() == 0) {
+        HashSet<Integer> copy = new HashSet<>(currentLst);
+        if (currentLetter.equals("G")) {
+          GLst.add(copy);
+        } else {
+          HLst.add(copy);
+        }
+        break;
+      }
+    }
+    //System.out.println(GLst);
+    //System.out.println(HLst);
+    ArrayList<HashSet<Integer>> remove = new ArrayList<>();
+    for (HashSet<Integer> set : HLst) {
+      if (set.size() == 1) {
+        remove.add(set);
+      }
+    }
+    for (HashSet<Integer> set : remove) {
+      HLst.remove(set);
+    }
+    remove = new ArrayList<>();
+    for (HashSet<Integer> set : GLst) {
+      if (set.size() == 1) {
+        remove.add(set);
+      }
+    }
+    for (HashSet<Integer> set : remove) {
+      GLst.remove(set);
+    }
+    
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("milkvisits.out")));
+    
+    for (int i = 0; i < M; i++) {
+      int start = s.nextInt();
+      int finish = s.nextInt();
+      String letter = s.next();
+      if (letter.equals("G")) {
+        boolean works = true;
+        for (HashSet<Integer> set : HLst) {
+          if (set.contains(start) && set.contains(finish)) {
+            pw.print(0);
+            works = false;
+            break;
+          }
+        }
+        if (works == true) {
+          pw.print(1);
+        }
+      } else {
+        boolean works = true;
+        for (HashSet<Integer> set : GLst) {
+          if (set.contains(start) && set.contains(finish)) {
+            pw.print(0);
+            works = false;
+            break;
+          }
+        }
+        if (works == true) {
+          pw.print(1);
+        }
+      }
+    }
+    pw.println();
+    pw.close();
+  }
+}
+
+/*
+1H - 5G
+|   
+2H - 3G
+|
+4H
+*/

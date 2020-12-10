@@ -1,0 +1,130 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("clocktree.in"));
+    int N = s.nextInt();
+    int[] array = new int[N];
+    ArrayList<Integer> arrayList = new ArrayList<>();
+    for (int i = 0; i < N; i++) {
+      array[i] = s.nextInt();
+      arrayList.add(array[i]);
+    }
+    HashMap<Integer, ArrayList<Integer>> connectionMap = new HashMap<>();
+    for (int i = 0; i < N; i++) {
+      connectionMap.put(i, new ArrayList<>());
+    }
+    for (int i = 0; i < N - 1; i++) {
+      int a = s.nextInt() - 1;
+      int b = s.nextInt() - 1;
+      connectionMap.get(a).add(b);
+      connectionMap.get(b).add(a);
+    }
+    System.out.println(connectionMap);
+
+    int counter = 0;
+
+    for (int i = 0; i < N; i++) {
+
+      HashMap<Integer, ArrayList<Integer>> connectionMapCopy = new HashMap<>();
+      for (int j = 0; j < N; j++) {
+        connectionMapCopy.put(j, new ArrayList<>());
+      }
+      for (int j = 0; j < N; j++) {
+        for (int num : connectionMap.get(j)) {
+          connectionMapCopy.get(j).add(num);
+        }
+      }
+
+      ArrayList<Integer> copyArray = new ArrayList(arrayList);
+      ArrayList<Integer> stack = new ArrayList<>();
+      stack.add(i);
+      HashSet<Integer> visited = new HashSet<>();
+      boolean breakTime = false;
+      while (!breakTime) {
+        for (int key : connectionMapCopy.keySet()) {
+          if (connectionMapCopy.get(key).size() == 1) {
+            copyArray.set(connectionMapCopy.get(key).get(0), copyArray.get(connectionMapCopy.get(key).get(0)) + Math.abs((12 - copyArray.get(key))));
+            copyArray.set(key, 12);
+
+            connectionMapCopy.get(connectionMapCopy.get(key).get(0)).remove(new Integer(key));
+
+            connectionMapCopy.get(key).remove(0);
+            
+            breakTime = false;
+            break; 
+          }
+          breakTime = true;
+        }
+      } 
+      System.out.println(copyArray);
+      
+      /*while (stack.size() > 0) {
+        int currentIndex = stack.remove(stack.size() - 1);
+        visited.add(currentIndex);
+        ArrayList<Integer> removeLst = new ArrayList<>();
+        for (int j = 0; j < connectionMapCopy.get(currentIndex).size(); j++) {
+          int neighbor = connectionMapCopy.get(currentIndex).get(j);
+          if (!visited.contains(neighbor)) {
+            if (connectionMapCopy.get(neighbor).size() == 1) {
+              removeLst.add(j);
+              copyArray.set(currentIndex, copyArray.get(currentIndex) + (12 - copyArray.get(neighbor)));
+              visited.add(neighbor);
+              copyArray.set(neighbor, 12);
+            } else {
+              stack.add(neighbor);
+            }
+          }
+        }
+        for (int j = 0; j < removeLst.size(); j++) {
+          connectionMapCopy.get(currentIndex).remove(removeLst.get(j));
+        }
+        if (removeLst.size() > 0) {
+          //visited = new HashSet<>();
+        }
+        System.out.println(connectionMapCopy);
+      }*/
+      if (copyArray.get(i) % 12 == 0 || (copyArray.get(i) - 1) % 12 == 0) {
+        boolean works = true;
+        for (int j = 0; j < N; j++) {
+          if (i != j && copyArray.get(j) 
+          != 12) {
+            works = false;
+          }
+        }
+        if (works) {
+          counter += 1;
+        } 
+      }
+      //System.out.println(copyArray);
+    }
+    System.out.println(counter);
+  }
+}
+
+/*
+clocktree:
+test cases
+degree of each node (number of neighbors)
+
+10 - 11 - 11
+| 
+11 - 11
+
+12 - 11 - 12
+
+10 - 9 - 9 - 10
+
+
+*/
+
+
+
+/*
+go through every single node (use it as a start point)
+search and find all "leaf" nodes and "cancel" them out (make it equal to 12 and then "delete" them from the tree)
+if the last two nodes are equal to each other or are different by 1, then the starting node works
+nodes that are adjacent to a starting node will not work
+hint: if a node works, every node that is distanced from it by a multiple of 2 (2, 4, 6, etc.) will also work, every node that is distanced from it by a odd number (1, 3, 5, 7, etc.) will not work (graph algorithm)
+*/

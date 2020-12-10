@@ -1,0 +1,71 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("balancing.in"));
+    int N = s.nextInt();
+    int[][] array = new int[N][2];
+    for (int i = 0; i < N; i++) {
+      array[i][0] = s.nextInt();
+      array[i][1] = s.nextInt();
+    }
+    Arrays.sort(array, (int[] a, int[] b) -> {
+      return a[0] - b[0];
+    });
+    int x1 = array[(array.length)/2 - 1][0] + 1;
+    int x2 = array[(array.length)/2 - 1][0] - 1;
+    Arrays.sort(array, (int[] a, int[] b) -> {
+      return a[1] - b[1];
+    });
+    int y1 = array[(array.length)/2 - 1][1] + 1;
+    int y2 = array[(array.length)/2 - 1][1] - 1;
+
+    int minValue = 2147483647;
+    int[][] combos = new int[4][2];
+    combos[0] = new int[] {x1, y1};
+    combos[1] = new int[] {x1, y2};
+    combos[2] = new int[] {x2, y1};
+    combos[3] = new int[] {x2, y2};
+    for (int i = 0; i < 4; i++) {
+      int upleft = 0;
+      int upright = 0;
+      int downleft = 0;
+      int downright = 0;
+      for (int j = 0; j < N; j++) {
+        if (array[j][0] < combos[i][0]) {
+          //left
+          if (array[j][1] > combos[i][1]) {
+            upleft += 1;
+          } else {
+            downleft += 1;
+          }
+        } else {
+          //right
+          if (array[j][1] > combos[i][1]) {
+            upright += 1;
+          } else {
+            downright += 1;
+          }
+        }
+      }
+      if (Math.max(Math.max(upleft, upright), Math.max(downleft, downright)) < minValue) {
+        minValue = Math.max(Math.max(upleft, upright), Math.max(downleft, downright));
+      }
+    }
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("balancing.out")));
+    pw.println(minValue);
+    pw.close();
+  }
+}
+
+/*
+
+* * | *
+* * | *
+    |    
+    |   * * *
+-------------        
+    |   * * *
+
+*/

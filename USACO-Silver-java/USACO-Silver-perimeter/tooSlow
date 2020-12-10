@@ -1,0 +1,99 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("perimeter.in"));
+    int N = s.nextInt();
+    String[][] array = new String[N][N];
+    for (int i = 0; i < N; i++) {
+      String newString = s.next();
+      for (int j = 0; j < N; j++) {
+        array[i][j] = String.valueOf(newString.charAt(j));
+      }
+    }
+    int maxArea = 0;
+    int maxPerimeter = 0;
+    HashSet<ArrayList<Integer>> visited = new HashSet<>();
+    for (int i = 0; i < N; i++) {
+      for (int j = 0; j < N; j++) {
+        ArrayList<ArrayList<Integer>> stack = new ArrayList<>();
+        ArrayList<Integer> temp = new ArrayList<Integer>();
+        temp.add(i);
+        temp.add(j);
+        stack.add(temp);
+        int currentArea = 0;
+        int currentPerimeter = 0;
+        if (!visited.contains(temp) && array[temp.get(0)][temp.get(1)].equals("#")) {
+          while (stack.size() > 0) {
+            ArrayList<Integer> currentCoor = stack.get(stack.size() - 1);
+            stack.remove(stack.size() - 1);
+            if (!visited.contains(currentCoor)) {
+              if (array[currentCoor.get(0)][currentCoor.get(1)].equals("#")) {
+                currentArea += 1;
+                visited.add(currentCoor);
+              }
+              ArrayList<Integer> copy1 = new ArrayList<>(currentCoor);
+              copy1.set(0, copy1.get(0) - 1);
+              if (currentCoor.get(0) > 0 && !visited.contains(copy1)) {
+                if (array[copy1.get(0)][copy1.get(1)].equals(".")) {
+                  currentPerimeter += 1;
+                } else {
+                  stack.add(copy1);
+                }
+              } else if (array[currentCoor.get(0)][currentCoor.get(1)].equals("#") && currentCoor.get(0) == 0) {
+                currentPerimeter += 1;
+              }
+              ArrayList<Integer> copy2 = new ArrayList<>(currentCoor);
+              copy2.set(0, copy2.get(0) + 1);
+              if (currentCoor.get(0) < N - 1 && !visited.contains(copy2)) {
+                if (array[copy2.get(0)][copy2.get(1)].equals(".")) {
+                  currentPerimeter += 1;
+                } else {
+                  stack.add(copy2);
+                }
+              } else if (array[currentCoor.get(0)][currentCoor.get(1)].equals("#") && currentCoor.get(0) == N - 1) {
+                currentPerimeter += 1;
+              }
+              ArrayList<Integer> copy3 = new ArrayList<>(currentCoor);
+              copy3.set(1, copy3.get(1) - 1);
+              if (currentCoor.get(1) > 0 && !visited.contains(copy3)) {
+                if (array[copy3.get(0)][copy3.get(1)].equals(".")) {
+                  currentPerimeter += 1;
+                } else {
+                  stack.add(copy3);
+                }
+              } else if (array[currentCoor.get(0)][currentCoor.get(1)].equals("#") && currentCoor.get(1) == 0) {
+                currentPerimeter += 1;
+              }
+              ArrayList<Integer> copy4 = new ArrayList<>(currentCoor);
+              copy4.set(1, copy4.get(1) + 1);
+              if (currentCoor.get(1) < N - 1 && !visited.contains(copy4)) {
+                if (array[copy4.get(0)][copy4.get(1)].equals(".")) {
+                  currentPerimeter += 1;
+                } else {
+                  stack.add(copy4);
+                }
+              } else if (array[currentCoor.get(0)][currentCoor.get(1)].equals("#") && currentCoor.get(1) == N - 1) {
+                currentPerimeter += 1;
+              }
+            }
+            
+          }
+          if (currentArea > maxArea) {
+            maxArea = currentArea;
+            maxPerimeter = currentPerimeter;
+          } else if (currentArea == maxArea) {
+            if (currentPerimeter > maxPerimeter) {
+              maxArea = currentArea;
+            maxPerimeter = currentPerimeter;
+            }
+          }
+        }
+      }
+    }
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("perimeter.out")));
+    pw.println(maxArea + " " + maxPerimeter);
+    pw.close();
+  }
+}

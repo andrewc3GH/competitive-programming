@@ -1,0 +1,50 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("citystate.in"));
+    int N = s.nextInt();
+    String[][] array = new String[N][2]; 
+    for (int i = 0; i < N; i++) {
+      array[i][0] = s.next();
+      array[i][1] = s.next();
+    }
+    for (int i = 0; i < N; i++) {
+      if (array[i][0].length() > 2) {
+        array[i][0] = array[i][0].substring(0, 2);
+      }
+    }
+
+    String[] combinedArray = new String[N];
+
+    for (int i = 0; i < N; i++) {
+      combinedArray[i] = array[i][0] + array[i][1];
+      System.out.println(combinedArray[i]);
+    }
+
+    HashSet<String> containsSet = new HashSet<>();  
+    for (int i = 0; i < N; i++) {
+      containsSet.add(combinedArray[i]);
+    }
+    System.out.println("-----------------");
+    int counter = 0;
+    for (int i = 0; i < N; i++) {
+      System.out.println(containsSet);
+      String[] newArray = new String[2];
+      newArray[0] = array[i][1];
+      newArray[1] = array[i][0];
+      String weirdString = array[i][1]+array[i][0];
+      int oldLen = containsSet.size();
+      containsSet.remove(weirdString);
+      System.out.println(containsSet);
+      counter += oldLen - containsSet.size();
+      for (int j = 0; j < oldLen - containsSet.size(); j++) {
+        containsSet.add(weirdString);
+      }
+    }
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("citystate.out")));
+    pw.println(counter/2);
+    pw.close();
+  }
+}

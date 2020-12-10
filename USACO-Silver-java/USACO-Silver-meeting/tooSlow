@@ -1,0 +1,72 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("meeting.in"));
+    int N = s.nextInt();
+    int M = s.nextInt();
+    int[][] roads = new int[M][4];
+    for (int i = 0; i < M; i++) {
+      roads[i] = new int[]{s.nextInt(), s.nextInt(), s.nextInt(), s.nextInt()};
+    }
+
+    // Queue<Integer> queue = new LinkedList<Integer>();
+    // new ArrayDeque
+
+    HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+    for (int i = 1; i < N + 1; i++) {
+      map.put(i, new ArrayList<>());
+    }
+
+    int[][][] arr = new int[M + 1][M + 1][3];
+    for (int i = 0; i < M; i++) {
+      arr[roads[i][0]][roads[i][1]] = new int[]{roads[i][2], roads[i][3]};
+      map.get(roads[i][0]).add(roads[i][1]);
+    }
+    System.out.println(map);
+
+    ArrayList<Integer> listOne = new ArrayList<>();
+    ArrayList<Integer> listTwo = new ArrayList<>();
+
+    for (int j = 0; j < 2; j++) {
+      Stack<Integer> queue = new Stack<Integer>();
+      queue.push(1);
+      while (queue.size() > 0) {
+        int current = queue.pop();
+        for (int i = 1; i < M + 1; i++) {
+          if (arr[current][i][0] != 0) {
+            queue.push(i);
+            arr[i][i][2] = arr[current][current][2] + arr[current][i][j];
+          }
+        }
+        
+        if (j == 0 && current == N) {
+          listOne.add(arr[current][current][2]);
+        } else if (current == N) {
+          listTwo.add(arr[current][current][2]);
+        }
+      }
+    }
+
+    int ans = 0;
+    Collections.sort(listOne);
+    //System.out.println(listOne + " " + listTwo);
+    for (int i = 0; i < listOne.size(); i++) {
+      if (listTwo.contains(listOne.get(i))) {
+        ans = listOne.get(i);
+        break;
+      }
+    }
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("meeting.out")));
+    pw.println(ans);
+    pw.close();
+  }
+}
+
+//dp: at each field, keep track of all the possible times it could take to get there
+
+//cowroute is bfs with a priority queue
+//input into a 2d array
+
+//2014 us open silver problem 2

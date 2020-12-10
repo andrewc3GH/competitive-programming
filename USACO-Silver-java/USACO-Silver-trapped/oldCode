@@ -1,0 +1,95 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("trapped.in"));
+    int N = s.nextInt();
+    int B = s.nextInt();
+    int[][] baleArray = new int[N][2];
+    int halfIndex = -1;
+    for (int i = 0; i < N; i++) {
+      int[] temp = new int[2];
+      temp[0] = s.nextInt();
+      temp[1] = s.nextInt();
+      baleArray[i] = temp;
+    }
+
+    Arrays.sort(baleArray, (int[] a, int[] b) -> {
+      return a[1] - b[1];
+    });
+
+    for (int i = 0; i < N; i++) {
+      if (baleArray[i][1] > B && halfIndex == -1) {
+        halfIndex = i;
+        break;
+      }
+    }
+    
+    int optimalIndex = -1;
+    int optimalRemaining = -1111111111;
+    for (int i = halfIndex - 1; i > -1; i--) {
+      if ((baleArray[i][0] - (baleArray[halfIndex][1] - baleArray[i][1])) > optimalRemaining) {
+        optimalRemaining = (baleArray[i][0] - (baleArray[halfIndex][1] - baleArray[i][1]));
+        optimalIndex = i;
+      }
+    }
+
+    System.out.println(optimalIndex);
+    int rightIndex = -1;
+    for (int i = halfIndex; i < N; i++) {
+      if (optimalIndex != -1 && baleArray[i][1] - baleArray[optimalIndex][1] <= baleArray[i][0]) {
+        rightIndex = i;
+        break;
+      }
+    }
+
+    int firstCounter = 0;
+
+    if (rightIndex != -1) {
+      firstCounter = baleArray[rightIndex][1] - baleArray[optimalIndex][1] - baleArray[optimalIndex][0];
+    } else {
+      firstCounter = 1111111111;
+    }
+    System.out.println(firstCounter);
+
+
+
+    optimalIndex = -1;
+    optimalRemaining = -1111111111;
+    for (int i = halfIndex; i < N; i++) {
+      if ((baleArray[i][0] - (baleArray[i][1] - baleArray[halfIndex - 1][1])) > optimalRemaining) {
+        optimalRemaining = (baleArray[i][0] - (baleArray[i][1] - baleArray[halfIndex - 1][1]));
+        optimalIndex = i;
+        break;
+      }
+      System.out.println(optimalIndex);
+    }
+    System.out.println(optimalIndex);
+    int leftIndex = -1;
+    for (int i = 0; i < halfIndex; i++) {
+      if (optimalIndex != -1 && baleArray[i][1] - baleArray[optimalIndex][1] <= baleArray[i][0]) {
+        leftIndex = i;
+        break;
+      }
+    }
+
+    int secondCounter = 0;
+
+    if (leftIndex != -1) {
+      secondCounter = baleArray[optimalIndex][1] - baleArray[leftIndex][1] - baleArray[optimalIndex][0];
+    } else {
+      secondCounter = 1111111111;
+    }
+    System.out.println(secondCounter);
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("trapped.out")));
+    if (secondCounter > firstCounter) {
+      pw.println(firstCounter);
+    } else if (secondCounter < firstCounter) {
+      pw.println(secondCounter);
+    } else {
+      pw.println(-1);
+    }
+    pw.close();
+  }
+}

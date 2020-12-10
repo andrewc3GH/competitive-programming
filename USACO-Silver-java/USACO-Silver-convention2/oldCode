@@ -1,0 +1,49 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("convention2.in"));
+    int N = s.nextInt();
+    HashMap<Integer,Integer> timeMap = new HashMap<>();
+    HashMap<int[],Integer> rankMap = new HashMap<>();
+    int[] orderedArray = new int[N];
+    for(int i = 0; i < N; i++) {
+      int arrive = s.nextInt();
+      int take = s.nextInt();
+      int[] temp = new int[2];
+      temp[0] = arrive;
+      temp[1] = take;
+      timeMap.put(arrive, take);
+      orderedArray[i] = arrive;
+      rankMap.put(temp, i + 1);
+    }
+    Arrays.sort(orderedArray); 
+    for(int i = 0; i < N; i++) {
+      System.out.println(orderedArray[i]);  
+    }
+    System.out.println(rankMap);
+    boolean occupied = false;
+    int newEndTime = 0;
+    int currentTime = 0;
+    ArrayList<int[]> waitLst = new ArrayList<>();
+    for(int i = 0; i < N; i++) {
+      int[] temp = new int[2];
+      temp[0] = orderedArray[i];
+      temp[1] = timeMap.get(orderedArray[i]);
+      if waitLst.size() == 0) {
+        waitLst.add(temp);
+      }
+      else {
+        while (true) {
+          
+        }
+      }
+      waitLst.add(temp);
+      System.out.println(waitLst);
+      if (occupied == false) {
+        
+      }
+    }
+  }
+}

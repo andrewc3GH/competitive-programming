@@ -1,0 +1,207 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) throws IOException {
+    int mod = (int)(Math.pow(10, 9) + 7);
+    Scanner s = new Scanner(new File("triangles.in"));
+    int N = s.nextInt();
+    long[][] array = new long[N][2];
+    for (int i = 0; i < N; i++) {
+      array[i][0] = s.nextLong();
+      array[i][1] = s.nextLong();
+    }
+    HashMap<ArrayList<Long>, long[]> coorMap = new HashMap<>();
+    HashMap<Long, ArrayList<long[]>> xMap = new HashMap<>();
+    HashMap<Long, ArrayList<long[]>> yMap = new HashMap<>();
+    HashMap<Long, ArrayList<Long>> xSum = new HashMap<>();
+    HashMap<Long, ArrayList<Long>> ySum = new HashMap<>();
+    HashMap<ArrayList<Long>, ArrayList<Long>> sums = new HashMap<>();
+    for (long[] coor : array) {
+      ArrayList<Long> temp = new ArrayList<>();
+      temp.add(coor[0]);
+      temp.add(coor[1]);
+      if (!xMap.containsKey(coor[0])) {
+        xMap.put(coor[0], new ArrayList<>());
+      }
+      if (!yMap.containsKey(coor[1])) {
+        yMap.put(coor[1], new ArrayList<>());
+      }
+      xMap.get(coor[0]).add(coor);
+      yMap.get(coor[1]).add(coor);
+      long[] tempLst = {0, 0};
+      coorMap.put(temp, tempLst);
+      if (!xSum.containsKey(coor[0])) {
+        xSum.put(coor[0], new ArrayList<>());
+      } if (!ySum.containsKey(coor[1])) {
+        ySum.put(coor[1], new ArrayList<>());
+      }
+      long[] newTemp = new long[2];
+      sums.put(temp, new ArrayList<Long>());
+    }
+    for (long key : xMap.keySet()) {
+      Collections.sort(xMap.get(key), (long[] a, long[] b) -> {
+        return(int)(a[1] - b[1]);
+      });
+    }
+    for (long key : yMap.keySet()) {
+      Collections.sort(yMap.get(key), (long[] a, long[] b) -> {
+        return(int)(a[0] - b[0]);
+      });
+    }
+    /*
+    for (long key : xMap.keySet()) {
+      for (long[] element : xMap.get(key)) {
+        System.out.println(Arrays.toString(element));
+      }
+    }
+    */
+    for (long key : xMap.keySet()) {
+      long currentSum = 0;
+      for (int i = 0; i < xMap.get(key).size(); i++) {
+        currentSum += (Math.abs(xMap.get(key).get(0)[1] - xMap.get(key).get(i)[1]));
+      }
+      xSum.get(key).add(currentSum);
+      ArrayList<Long> temp = new ArrayList<>();
+      temp.add(xMap.get(key).get(0)[0]);
+      temp.add(xMap.get(key).get(0)[1]);
+      sums.get(temp).add(currentSum);
+      for (int i = 1; i < xMap.get(key).size(); i++) {
+        long newSum = currentSum;
+        newSum += (Math.abs(xMap.get(key).get(i)[1] - xMap.get(key).get(i - 1)[1]) * i) % mod;
+        newSum -= (Math.abs(xMap.get(key).get(i)[1] - xMap.get(key).get(i - 1)[1]) * (xMap.get(key).size() - 1)) % mod;
+        xSum.get(key).add(newSum);
+
+        ArrayList<Long> newTemp = new ArrayList<>();
+        newTemp.add(xMap.get(key).get(i)[0]);
+        newTemp.add(xMap.get(key).get(i)[1]);
+        sums.get(newTemp).add(newSum);
+      }
+    }
+    
+    //System.out.println(xSum);
+    for (long key : yMap.keySet()) {
+      long currentSum = 0;
+      for (int i = 0; i < yMap.get(key).size(); i++) {
+        currentSum += (Math.abs(yMap.get(key).get(0)[0] - yMap.get(key).get(i)[0]));
+      }
+      
+      ySum.get(key).add(currentSum);
+      ArrayList<Long> temp = new ArrayList<>();
+      temp.add(yMap.get(key).get(0)[0]);
+      temp.add(yMap.get(key).get(0)[1]);
+      sums.get(temp).add(currentSum);
+      for (int i = 1; i < yMap.get(key).size(); i++) {
+        long newSum = currentSum;
+        newSum += (Math.abs(yMap.get(key).get(i)[0] - yMap.get(key).get(i - 1)[0]) * i) % mod;
+        newSum -= (Math.abs(yMap.get(key).get(i)[0] - yMap.get(key).get(i - 1)[0]) * (yMap.get(key).size() - 1)) % mod;
+        ySum.get(key).add(newSum);
+        if (newSum == 0) {
+          System.out.print("uh oh");
+        }
+
+        ArrayList<Long> newTemp = new ArrayList<>();
+        newTemp.add(yMap.get(key).get(i)[0]);
+        newTemp.add(yMap.get(key).get(i)[1]);
+        sums.get(newTemp).add(newSum);
+      }
+    }
+    //System.out.println(ySum);
+
+    //System.out.println("sums: " + sums);
+    /*
+    HashMap<Long, Long> xSums = new HashMap<>();
+    HashMap<Long, Long> ySums = new HashMap<>();
+
+    for (long key : xSum.keySet()) {
+      long newNum = 0;
+      for (long i = 0; i < xSum.get(key).size(); i++) {
+        newNum += xSum.get(key).get(i);
+      }
+      xSums.put(key, newNum/2);
+    }
+    for (long key : ySum.keySet()) {
+      long newNum = 0;
+      for (long i = 0; i < ySum.get(key).size(); i++) {
+        newNum += ySum.get(key).get(i);
+      }
+      ySums.put(key, newNum/2);
+    }*/
+    //System.out.println(xSums);
+    //System.out.println(ySums);
+
+    long answer = 0;
+    for (long[] coor : array) {
+      
+      ArrayList<Long> temp = new ArrayList<>();
+      temp.add(coor[0]);
+      temp.add(coor[1]);
+      answer += (sums.get(temp).get(0) * sums.get(temp).get(1)) % mod;
+
+
+      if ((sums.get(temp).get(0) * sums.get(temp).get(1)) != 0) {
+        System.out.println(sums.get(temp));
+        System.out.println((sums.get(temp).get(0) * sums.get(temp).get(1)) % mod);
+      }
+    }
+    /*
+    for (long key : xMap.keySet()) {
+      for (long i = 0; i < xMap.get(key).size(); i++) {
+        ArrayList<Long> coor1 = new ArrayList<>();
+        coor1.add(array[i][0]);
+        coor1.add(array[i][1]);
+        long yVal = xSum.get(coor1.get(0));
+        yVal -= coor1.get(1);
+      }
+    }
+    */
+    /*
+    for (long i = 0; i < N; i++) {
+      ArrayList<Long> coor1 = new ArrayList<>();
+      coor1.add(array[i][0]);
+      coor1.add(array[i][1]);
+      long xVal = array[i][0];
+      long yVal = array[i][1];
+      for (long yValue : xMap.get(xVal)) {
+        coorMap.get(coor1)[1] += Math.abs(yValue - yVal);
+      }
+      for (long xValue : yMap.get(yVal)) {
+        coorMap.get(coor1)[0] += Math.abs(xValue - xVal);
+      }
+    }
+
+    double longermediate = 0;
+    for (ArrayList<Long> key : coorMap.keySet()) {
+      longermediate += coorMap.get(key)[0] * coorMap.get(key)[1];
+    }
+    */
+    /*
+    for (long i = 0; i < N; i++) {
+      xMap.get(array[i][0]).add(array[i][1]);
+      yMap.get(array[i][1]).add(array[i][0]);
+    }
+    */
+
+    System.out.println(answer);
+    answer %= (int)(Math.pow(10, 9) + 7);
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("triangles.out")));
+    pw.println(answer);
+    pw.close();
+  }
+}
+
+/*
+triangles:
+Find all other polongs a polong can verticaly/horizontaly pair with in order to create a side (maybe use hashmap to correspond x-coordinate/y-coordinate to each polong)
+Then find all of the combinations and compute the sum
+*/
+
+/*
+find the sum of the distances of all the polongs on the same line from a single polong
+then in constant time, go through every other polong and the sum can be calculated by adding and subtracting some distances
+compute everything
+*/
+
+/*
+when adding to sums (in the line), mod by (10^9 + 7) each time
+*/

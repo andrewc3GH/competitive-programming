@@ -1,0 +1,117 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static long N;
+  public static long K;
+  public static long M;
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("loan.in"));
+    N = s.nextLong();
+    K = s.nextLong();
+    M = s.nextLong();
+    s.close();
+    /*int numRemaining = N - ((K - 1) * M);*/
+    long minRange = 1;
+    long maxRange = K;
+    long currentNum = 0;
+    while (true) {
+      currentNum = findIndex(minRange, maxRange);
+      if (check(currentNum)) {
+        if ((currentNum < K && !check(currentNum + 1)) || currentNum == K - 1) {
+          break;
+        }
+        minRange = currentNum;
+      } else {
+        maxRange = currentNum;
+      }
+    }
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("loan.out")));
+    pw.println(currentNum);
+    pw.close();
+  }
+  public static boolean check(long X) {
+    /*long G = 0;
+    long numDays = 0;
+    while (numDays < K || N > G) {
+      long numAdded = (N - G)/X;
+      if (numAdded < M) {
+        if ((N - G) <= ((K - numDays) * M)) {
+          return true;
+        } else {
+          return false;
+        }
+      } 
+    }
+    if (G > N) {
+      return true;
+    } else {
+      return false;
+    }*/
+    
+    if (X == 1) {
+      return true;
+    }
+
+    /*
+    long multiplier = X;
+    long numDays = 0;
+    long G = 0;
+    while (true) {
+      if ((N - G)/multiplier < M) {
+        break;
+      }
+      G += (N - G)/multiplier;
+      numDays += 1;
+    }
+    System.out.println(multiplier);
+    if (((K - numDays) * M) + G > N) {
+      return true;
+    }
+    return false;*/
+    System.out.println("X: " + X);
+    long minRange = 1;
+    long maxRange = K;
+    long currentNum = 0;
+    //System.out.println(N + "/" + multiplier + " = " + N/multiplier + " < " + M);
+    double multiplier = ((double)(X - 1)/(double)X);
+    long divisor = X;
+    while (true) {
+      currentNum = findIndex(minRange, maxRange);
+      //double fractionOfN = 1 - Math.pow(multiplier, (double)currentNum);
+      multiplier = Math.pow((double)(X - 1)/(double)X, currentNum - 1);
+      if ((double)N*multiplier/(double)X >= M) {
+        if ((currentNum < K && (N*((Math.pow((double)(X - 1)/(double)X, currentNum))/(double)X)) < M) || currentNum == K - 1) {
+          break;
+        }
+        minRange = currentNum;
+      } else {
+        maxRange = currentNum;
+      }
+    }
+    
+    //System.out.println(((double)N*Math.pow(multiplier, (double)currentNum)/((double)(N - ((K - currentNum) * M)))));
+    System.out.println("currentNum: " + currentNum);
+    System.out.println((double)(((K - currentNum) * M)));
+    System.out.println(multiplier);
+
+    if (N - (double)N*Math.pow(multiplier, (double)currentNum)/(double)X < ((double)(((K - currentNum) * M)))) {
+      System.out.println("true");
+      return true;
+    }
+    /*
+    if (((double)N*Math.pow(multiplier, (double)currentNum)/((double)(N - ((K - currentNum) * M)))) > Math.pow(multiplier, (double)currentNum)) {
+      return true;
+    }
+
+    if ((int)((double)N*Math.pow(multiplier, (double)currentNum)/((double)(N - ((K - currentNum) * M)))) > Math.pow(multiplier, (double)currentNum)) {
+      System.out.println(X + " works");
+      return true;
+    }*/
+    return false;
+  }
+
+  public static long findIndex(long min, long max) {
+    return (long)((min + max)/2);
+  }
+}

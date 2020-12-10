@@ -1,0 +1,71 @@
+import java.io.*;
+import java.util.*;
+
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("triangles.in"));
+    int N = s.nextInt();
+    int[][] array = new int[N][2];
+    for (int i = 0; i < N; i++) {
+      array[i][0] = s.nextInt();
+      array[i][1] = s.nextInt();
+    }
+    HashMap<ArrayList<Integer>, int[]> coorMap = new HashMap<>();
+    HashMap<Integer, ArrayList<Integer>> xMap = new HashMap<>();
+    HashMap<Integer, ArrayList<Integer>> yMap = new HashMap<>();
+    for (int[] coor : array) {
+      ArrayList<Integer> temp = new ArrayList<>();
+      temp.add(coor[0]);
+      temp.add(coor[1]);
+      if (!xMap.containsKey(coor[0])) {
+        xMap.put(coor[0], new ArrayList<>());
+      }
+      if (!yMap.containsKey(coor[1])) {
+        yMap.put(coor[1], new ArrayList<>());
+      }
+      xMap.get(coor[0]).add(coor[1]);
+      yMap.get(coor[1]).add(coor[0]);
+      int[] tempLst = {0, 0};
+      coorMap.put(temp, tempLst);
+    }
+    //System.out.println(coorMap);
+
+    for (int i = 0; i < N; i++) {
+      ArrayList<Integer> coor1 = new ArrayList<>();
+      coor1.add(array[i][0]);
+      coor1.add(array[i][1]);
+      int xVal = array[i][0];
+      int yVal = array[i][1];
+      for (int yValue : xMap.get(xVal)) {
+        coorMap.get(coor1)[1] += Math.abs(yValue - yVal);
+      }
+      for (int xValue : yMap.get(yVal)) {
+        coorMap.get(coor1)[0] += Math.abs(xValue - xVal);
+      }
+    }
+
+    double intermediate = 0;
+    for (ArrayList<Integer> key : coorMap.keySet()) {
+      intermediate += coorMap.get(key)[0] * coorMap.get(key)[1];
+    }
+
+    /*
+    for (int i = 0; i < N; i++) {
+      xMap.get(array[i][0]).add(array[i][1]);
+      yMap.get(array[i][1]).add(array[i][0]);
+    }
+    */
+
+    
+    long answer = (long)(intermediate) % (long)(Math.pow(10, 9) + 7);
+    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("triangles.out")));
+    pw.println(answer);
+    pw.close();
+  }
+}
+
+/*
+triangles:
+Find all other points a point can verticaly/horizontaly pair with in order to create a side (maybe use hashmap to correspond x-coordinate/y-coordinate to each point)
+Then find all of the combinations and compute the sum
+*/
