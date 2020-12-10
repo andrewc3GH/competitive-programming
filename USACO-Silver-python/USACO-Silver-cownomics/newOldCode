@@ -1,0 +1,10 @@
+numComb = 0
+for comb in combLst:
+  plainSet = set()
+  for plainCow in plainCows:
+    plainSet.add((plainCow[int(comb[0])], plainCow[int(comb[1])], plainCow[int(comb[2])]))
+  spottedSet = set()
+  for spottedCow in spottedCows:
+    spottedSet.add((spottedCow[int(comb[0])], spottedCow[int(comb[1])], spottedCow[int(comb[2])]))
+  if len(plainSet.intersection(spottedSet)) == 0:
+    numComb += 1

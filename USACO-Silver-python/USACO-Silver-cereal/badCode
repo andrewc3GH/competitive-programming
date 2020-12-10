@@ -1,0 +1,17 @@
+for key in firstPickDict:
+    for j in range(len(firstPickDict[key])):
+      if firstPickDict[key][0] >= i and firstPickDict[key][0] not in cerealRecieved:
+        cerealRecieved.add(firstPickDict[key][0])
+        if firstPickDict[key][0] == i:
+          firstPickDict[key].pop(0)
+        break
+      else:
+        firstPickDict[key].pop(0)
+  for key in secondPickDict:
+    for j in range(len(secondPickDict[key])):
+      if secondPickDict[key][0] >= i and secondPickDict[key][0] not in cerealRecieved:
+        cerealRecieved.add(secondPickDict[key][0])
+          
+        break
+      else:
+        secondPickDict[key].pop(0)

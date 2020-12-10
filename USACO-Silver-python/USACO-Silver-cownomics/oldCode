@@ -1,0 +1,10 @@
+numComb = 0
+for comb in combLst:
+  newComb = 0
+  plainLst = []
+  for plainCow in plainCows:
+    for spottedCow in spottedCows:
+      if spottedCow[int(comb[0])] != plainCow[int(comb[0])] or spottedCow[int(comb[1])] != plainCow[int(comb[1])] or spottedCow[int(comb[2])] != plainCow[int(comb[2])]:
+        newComb += 1
+  if newComb == numCowsHalf * numCowsHalf:
+    numComb += 1

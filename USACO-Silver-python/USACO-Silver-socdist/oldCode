@@ -1,0 +1,52 @@
+'''
+ID: cruzan1
+LANG: PYTHON3
+TASK: socdist
+'''
+
+f = open('socdist.in', 'r')
+info = f.readline().strip().split()
+numCows = int(info[0])
+numIntervals = int(info[1])
+intervalLst = []
+intervalDict = {}
+for i in range(numIntervals):
+  interval = f.readline().strip().split()
+  intervalLst.append([int(interval[0]), int(interval[1])])
+intervalLst.sort()
+
+maxD = int((intervalLst[-1][1] - intervalLst[0][0] + 1)/numCows)
+startingNum = intervalLst[0][0]
+endingNum = intervalLst[-1][1]
+while maxD > 1:
+  oldNum = startingNum - maxD
+  numUsed = 0
+  indexOfWindow = 0
+  currentNum = startingNum
+  while currentNum < endingNum + 1:
+    if currentNum - maxD >= oldNum:
+      for interval in intervalLst[indexOfWindow:]:
+        if currentNum >= interval[0] and currentNum <= interval[1]:
+          oldNum = currentNum
+          numUsed += 1
+          currentNum += maxD
+          break
+        elif currentNum > interval[1]:
+          indexOfWindow += 1
+        else:
+          currentNum += 1
+          break
+    else:
+      currentNum += 1
+    if numUsed == numCows:
+      break
+    if int((endingNum - currentNum + maxD)/(numCows - numUsed)) < maxD:
+      break
+  if numUsed == numCows:
+    break
+  else:
+    maxD -= 1
+
+out = open('socdist.out', 'w+')
+out.write(str(maxD) + '\n')
+out.close()

@@ -1,0 +1,63 @@
+'''
+ID: cruzan1
+LANG: PYTHON3
+TASK: cereal
+'''
+
+f = open('cereal.in', 'r')
+info = f.readline().strip().split()
+numCows = int(info[0])
+numCereals = int(info[1])
+cowLst = []
+for i in range(numCows):
+  cowInfo = f.readline().strip().split()
+  cowLst.append([int(cowInfo[0]), int(cowInfo[1])])
+f.close()
+firstPickDict = {}
+secondPickDict = {}
+for i in range(len(cowLst)):
+  if cowLst[i][0] in firstPickDict:
+    firstPickDict[cowLst[i][0]].append(i)
+  else:
+    firstPickDict[cowLst[i][0]] = [i]
+  if cowLst[i][1] in secondPickDict:
+    secondPickDict[cowLst[i][1]].append(i)
+  else:
+    secondPickDict[cowLst[i][1]] = [i]
+
+print(firstPickDict)
+print(secondPickDict)
+pickDict = {}
+out = open('cereal.out', 'w+')
+for i in range(numCows - 1):
+  cerealRecieved = set()
+  newLst = cowLst.copy()
+  firstChoiceGone = newLst[i][0]
+  secondChoiceGone = newLst[i + 1][1]
+  newLst = newLst[i:]
+  print(newLst)
+  counter = 0
+  cerealRecieved.remove(firstPickDict[firstChoiceGone][0])
+  cerealRecieved.remove(secondPickDict[secondChoiceGone][0])
+  print(cerealRecieved)
+  firstPickDict[firstChoiceGone].pop(0)
+  secondPickDict[secondChoiceGone].pop(0)
+  print(firstPickDict)
+  print(secondPickDict)
+  for index in firstPickDict[firstChoiceGone]:
+    if index in cerealRecieved:
+      for secondIndex in secondChoiceDict[pickDict[index]]:
+        swapT = False
+        if secondIndex not in cerealRecieved:
+          cerealRecieved.add(secondIndex)
+          swap = pickDict[secondIndex]
+          swapT = True
+          pickDict[secondIndex] = pickDict[index]
+        #if swapT == True:
+    else:
+      cerealRecieved.add(index)
+      pickDict[index] = firstChoiceGone
+    counter += 1
+  
+out.write(str(len(cerealRecieved)) + '\n')
+out.close()

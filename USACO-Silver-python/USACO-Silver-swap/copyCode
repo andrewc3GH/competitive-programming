@@ -1,0 +1,13 @@
+numTimesToLoop = 0
+counter = 0
+while counter <= numLoops - 1:
+  counter += 1
+  for i in range(len(swapLst)):
+    for j in range(int(swapLst[i][1]/swapLst[i][0])):
+      smallSwap = cowLst[swapLst[i][0] + j - 1]
+      cowLst[swapLst[i][0] + j - 1] = cowLst[swapLst[i][1] - j - 1]
+      cowLst[swapLst[i][1] - j - 1] = smallSwap
+  if cowLst == originalCowLst:
+    numTimestoLoop = counter
+    if numTimestoLoop + counter <= numLoops:
+      counter += int((numLoops - counter)/numTimestoLoop) * numTimestoLoop

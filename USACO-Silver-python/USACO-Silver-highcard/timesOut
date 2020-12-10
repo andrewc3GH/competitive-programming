@@ -1,0 +1,24 @@
+f = open('highcard.in', 'r')
+numCards = int(f.readline().strip())
+otherCowDeck = []
+cowDeck = []
+for i in range(numCards):
+  otherCowDeck.append(int(f.readline().strip()))
+for i in range(numCards * 2):
+  if (i + 1) not in otherCowDeck:
+    cowDeck.append(i + 1)
+f.close()
+
+cowDeck.sort()
+otherCowDeck.sort()
+
+numWins = 0
+counter1 = 0
+while len(otherCowDeck) > 0:
+  while len(cowDeck) > 0:
+    if cowDeck[0] > otherCowDeck[0]:
+      numWins += 1
+      cowDeck.pop(0)
+      break
+    cowDeck.pop(0)
+  otherCowDeck.pop(0)

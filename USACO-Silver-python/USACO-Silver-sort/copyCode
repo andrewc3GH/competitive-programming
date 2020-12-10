@@ -1,0 +1,11 @@
+counter = 0
+sOrted = False
+while (sOrted == False):
+  sOrted = True
+  counter += 1
+  for i in range(0, numNums - 1):
+    if numLst[i+1] < numLst[i]:
+      swapVar = numLst[i+1]
+      numLst[i + 1] = numLst[i]
+      numLst[i] = swapVar
+      sOrted = False

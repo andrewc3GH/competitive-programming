@@ -1,0 +1,5 @@
+def findIfWorks(D, currentNum, oldNum):
+  if currentNum == endingNum:
+    return
+  if currentNum - D 
+  findIfWorks(D, currentNum + 1, currentNum)

@@ -1,0 +1,33 @@
+while True:
+  for i in range(len(diamondLst)):
+    currentNumPairs = 1
+    if (i + 1) < difference and i != 0:
+      for j in range(0, i):
+        if abs(diamondLst[i] - diamondLst[j]) <= difference:
+          currentNumPairs += 1
+    else:
+      for j in range(i - difference, i):
+        if abs(diamondLst[i] - diamondLst[j]) <= difference:
+          currentNumPairs += 1
+    if currentNumPairs > maxPairs and i not in cantBeMax:
+      oldMaxPairs = maxPairs
+      oldMaxIndex = maxIndex
+      maxPairs = currentNumPairs
+      maxIndex = i
+      secondMaxPairs = oldMaxPairs
+      secondMaxIndex = oldMaxIndex
+      cantBeMax.add(i)
+    elif currentNumPairs > secondMaxPairs and i not in cantBeSecondMax:
+      oldSecondMaxPairs = secondMaxPairs
+      oldSecondMaxIndex = secondMaxIndex
+      secondMaxPairs = currentNumPairs
+      secondMaxIndex = i
+      cantBeSecondMax.add(i)
+  if abs(diamondLst[maxIndex] - diamondLst[secondMaxIndex]) > difference:
+    break
+  maxPairs = 0
+  maxIndex = 0
+  secondMaxPairs = 0
+  secondMaxIndex = 0
+  cantBeMax = set()
+  cantBeSecondMax = set()

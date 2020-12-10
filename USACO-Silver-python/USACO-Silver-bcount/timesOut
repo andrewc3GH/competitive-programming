@@ -1,0 +1,15 @@
+out = open('bcount.out', 'w+')
+for i in range(numQ):
+  rangeInfo = f.readline().strip().split()
+  num1 = 0
+  num2 = 0
+  num3 = 0
+  for j in range(int(rangeInfo[0]) - 1, int(rangeInfo[1])):
+    if cowLst[j] == 1:
+      num1 += 1
+    elif cowLst[j] == 2:
+      num2 += 1
+    elif cowLst[j] == 3:
+      num3 += 1
+  out.write(str(num1) + " " + str(num2) + " " + str(num3) + '\n')
+out.close()
