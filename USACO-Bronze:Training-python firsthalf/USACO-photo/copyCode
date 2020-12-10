@@ -1,0 +1,11 @@
+print(i)
+      print("aaaaa" + str(cowLst[i]))
+      if (i == numAnswers - 1 or (i != numAnswers - 1 and j <= cowLst[i + 1])) and (oldNum + newNum == cowLst[i]):  
+        finalOrder.append(oldNum)
+        if i == numAnswers - 1:
+          finalOrder.append(newNum) 
+        oldNum = newNum
+        newNum = cowLst[i] - newNum 
+      else:
+        finalOrder = []
+  print(finalOrder

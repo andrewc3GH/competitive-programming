@@ -1,0 +1,86 @@
+'''
+ID: cruzan1
+LANG: PYTHON3
+TASK: notlast
+'''
+
+def inPut():
+  f = open('notlast.in', 'r')
+  N = int(f.readline().strip())
+  logDict = {}
+  nameLst = []
+  for i in range(N):
+    var = f.readline().strip().split()
+    var1 = var[0]
+    var2 = int(var[1])
+    if var1 in nameLst:
+      pass
+    else:  
+      nameLst.append(var1)
+    if var1 in logDict:
+      logDict[var1] += var2
+    else:
+      logDict[var1] = var2
+  return [nameLst, logDict, N]
+
+def calculator1(nameLst, logDict):
+  minCowLst = []
+  numLst = []
+  num = logDict[nameLst[0]]
+  counter = 0
+  for i in range(len(logDict)):
+    numLst.append(logDict[nameLst[i]])
+    if logDict[nameLst[i]] == num:
+      counter += 1
+  if counter == len(numLst):
+    return ["Tie"]
+  minNum = 101
+  for j in range(len(numLst)):
+    if numLst[j] <= minNum:
+      minNum = numLst[j]
+  for i in range(len(logDict)):
+    if logDict[nameLst[i]] == minNum:
+      minCowLst.append(nameLst[i])
+  return [minCowLst, minNum, logDict, nameLst]
+
+def calculator2(minCowLst, minNum, logDict, nameLst):
+  secondLastCowLst = []
+  oldMinNum = minNum
+  minNum = 101
+  for i in range(len(logDict)):
+    if logDict[nameLst[i]] <= minNum:
+      if logDict[nameLst[i]] == oldMinNum:
+        pass
+      else:
+        minNum = logDict[nameLst[i]]
+  for j in range(len(logDict)):
+    if logDict[nameLst[j]] == minNum:
+      secondLastCowLst.append(nameLst[j])
+  return secondLastCowLst
+
+def output(secondLastCowLst):
+  out = open('notlast.out', 'w')
+  if len(secondLastCowLst) > 1:
+    out.write("Tie" + '\n')
+  else:
+    out.write(secondLastCowLst[0] + '\n')
+  out.close()
+
+var = inPut()
+var1 = inPut()[0]
+var2 = inPut()[1]
+N = inPut()[2]
+if N == 0:
+  output(["Tie"])
+elif len(var2) == 1:
+  output(var1)
+else:
+  var11 = calculator1(var1, var2)
+  var12 = var11[0]
+  var13 = var11[1]
+  var14 = var11[2]
+  var15 = var11[3]
+  if len(var[0]) < 7:
+    output(var12)
+  else:
+    output(calculator2(var12, var13, var14, var15))

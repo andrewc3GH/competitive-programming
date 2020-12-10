@@ -1,0 +1,59 @@
+'''
+ID: cruzan1
+LANG: PYTHON3
+TASK: photo
+'''
+
+def inPut():
+  f = open('photo.in', 'r')
+  numAnswers = int(f.readline().strip())
+  cowLst = f.readline().strip().split()
+  for i in range(len(cowLst)):
+    cowLst[i] = int(cowLst[i])
+  return numAnswers, cowLst
+
+def calculate(numAnswers, cowLst):
+  finalOrder = []
+  for j in range(1, cowLst[0]):
+    oldNum = j
+    newNum = (cowLst[0] - j) 
+    for i in range(numAnswers - 1):
+      finalOrder.append(oldNum)
+      if i == numAnswers - 2:
+        finalOrder.append(newNum)
+      else:
+        oldNum = newNum
+        if cowLst[i + 1] >= oldNum:
+          newNum = cowLst[i + 1] - oldNum
+        else:
+          break
+  return finalOrder
+
+def checkingFinalOrders(finalOrder, numAnswers):
+  overallLst = []
+  newFinalOrder = []
+  for i in range(int(len(finalOrder)/numAnswers)):
+    newLst = []
+    for j in range(numAnswers):
+      newLst.append(finalOrder[j + i * (numAnswers)])
+    overallLst.append(newLst)
+  print(overallLst)
+  for j in range(len(overallLst)):
+    counter = 0
+    for k in range(1, numAnswers + 1):
+      if k in overallLst[j]:
+        counter += 1
+      else:
+        break
+    if counter == numAnswers:
+      return overallLst[j]
+
+out = open('photo.out', 'w')
+outStr = ""
+for i in checkingFinalOrders(calculate(inPut()[0], inPut()[1]), inPut()[0]):
+  if len(outStr) == 0:
+    outStr += str(i)
+  else:
+    outStr += " " + str(i)
+out.write(outStr + '\n')
+out.close()
