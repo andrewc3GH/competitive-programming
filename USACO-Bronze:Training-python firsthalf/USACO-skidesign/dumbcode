@@ -1,0 +1,71 @@
+'''
+ID: cruzan1
+LANG: PYTHON3
+TASK: skidesign
+'''
+
+f = open('skidesign.in', 'r')
+numHills = int(f.readline().strip())
+hillLst = []
+for i in range(numHills):
+  hillLst.append(int(f.readline().strip()))
+hillLst.sort()
+print(hillLst)
+oldLst = hillLst.copy()
+currentDifference = hillLst[len(hillLst) - 1] - hillLst[0]
+bottomElement = 0
+topElement = len(hillLst) - 1
+while currentDifference > 17:
+  minIndex = len(hillLst) - 1
+  minNum = hillLst[len(hillLst) - 1]
+  for i in range(len(hillLst)):
+    if hillLst[i] < minNum:
+      minNum = hillLst[i]
+      minIndex = i
+  hillLst[minIndex] += 1
+  minIndex = len(hillLst) - 1
+  minNum = hillLst[len(hillLst) - 1]
+  for i in range(len(hillLst)):
+    if hillLst[i] < minNum:
+      minNum = hillLst[i]
+      minIndex = i
+  maxIndex = 0
+  maxNum = hillLst[0]
+  for i in range(len(hillLst)):
+    if hillLst[i] > maxNum:
+      maxNum = hillLst[i]
+      maxIndex = i
+  currentDifference = maxNum - minNum
+  if currentDifference == 17:
+    break
+  maxIndex = 0
+  maxNum = hillLst[0]
+  for i in range(len(hillLst)):
+    if hillLst[i] > maxNum:
+      maxNum = hillLst[i]
+      maxIndex = i
+  hillLst[maxIndex] -= 1
+  minIndex = len(hillLst) - 1
+  minNum = hillLst[len(hillLst) - 1]
+  for i in range(len(hillLst)):
+    if hillLst[i] < minNum:
+      minNum = hillLst[i]
+      minIndex = i
+  maxIndex = 0
+  maxNum = hillLst[0]
+  for i in range(len(hillLst)):
+    if hillLst[i] > maxNum:
+      maxNum = hillLst[i]
+      maxIndex = i
+  currentDifference = maxNum - minNum
+  if currentDifference == 17:
+    break
+print(currentDifference)
+totalCost = 0
+for i in range(len(hillLst)):
+  totalCost += abs(hillLst[i] - oldLst[i]) * abs(hillLst[i] - oldLst[i])
+print(hillLst)
+
+out = open('skidesign.out', 'w+')
+out.write(str(totalCost) + '\n')
+out.close()
