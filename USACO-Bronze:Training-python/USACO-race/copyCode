@@ -1,0 +1,40 @@
+
+def calculate(numMeters, numTrials, overallLst):
+  trialLst = []
+  for i in range(numTrials):
+    speedLimit = overallLst[i]
+    currentMin = 10000000000000000000000000000000000000000000000000000000000000000000000000000000
+    increasedCounter = 0
+    oldSpeed = 0
+    oldSeconds = 0
+    oldCMTG = numMeters
+    while True:
+      currentSpeed = oldSpeed
+      currentSeconds = oldSeconds
+      currentMetersToGo = oldCMTG
+      while currentMetersToGo > 0:
+        if currentMetersToGo < (currentSpeed * 2) and currentSpeed > speedLimit:
+          currentSpeed -= 1
+        elif currentSpeed < (speedLimit + increasedCounter):
+          currentSpeed += 1
+          if currentMetersToGo < (currentSpeed * 2) and currentSpeed > speedLimit:
+            currentSpeed -= 1
+          oldSpeed = currentSpeed
+          oldSeconds = currentSeconds
+          oldCMTG = currentMetersToGo
+        currentMetersToGo -= currentSpeed
+        currentSeconds += 1
+      if currentSeconds < currentMin and currentSpeed <= speedLimit:
+        currentMin = currentSeconds
+        increasedCounter += 1
+      else:
+        trialLst.append(currentMin)
+        break
+  return trialLst
+
+out = open('race.out', 'w')
+var = inPut()
+newLst = calculate(var[0], var[1], var[2])
+for i in range(len(newLst)):
+  out.write(str(newLst[i]) + '\n')
+out.close()

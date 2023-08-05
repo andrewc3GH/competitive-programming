@@ -1,0 +1,81 @@
+import java.io.*;
+import java.util.*;
+
+//still thinking of solution but N^4 might work
+
+class Main {
+  public static void main(String[] args) throws IOException {
+    Scanner s = new Scanner(new File("hopscotch.in"));
+    int R = s.nextInt();
+    int C = s.nextInt();
+    int K = s.nextInt();
+
+    int[][] array = new int[R][C];
+    ArrayList[][] edgeMatrix = new ArrayList[R][C];
+    //int[][][] contentArray = new int[R][C][R*C + 1];
+    
+    for (int i = 0; i < R; i++) {
+      for (int j = 0; j < C; j++) {
+        array[i][j] = s.nextInt();
+        edgeMatrix[i][j] = new ArrayList<>();
+      }
+      System.out.println(Arrays.toString(array[i]));
+    }
+
+    //initialize bottom right corner
+    for (int i = 0; i < R - 1; i++) {
+      for (int j = 0; j < C - 1; j++) {
+        /*
+        if (array[i][j] != array[R - 1][C - 1]) {
+          edgeMatrix[R - 1][C - 1].add(new int[]{i, j});
+        }
+        contentArray[R - 1][C - 1][array[i][j]] += 1;
+        */
+
+        edgeMatrix[R - 1][C - 1].add(new int[]{i, j});
+      }
+    }
+    for (int i = 0; i < R; i++) {
+      System.out.println(Arrays.toString(edgeMatrix[i]));
+    }
+    //System.out.println(Arrays.toString(contentArray[R - 1][C - 1]));
+
+    //initialize bottom row
+    for (int i = C - 2; i > -1; i--) {
+      //contentArray[R - 1][i] = contentArray[R - 1][i + 1].clone();
+      for (int j = 0; j < R - 1; j++) {
+        //contentArray[R - 1][i][array[i][j]] -= 1;
+      }
+    }
+
+    /*
+    System.out.println("---------");
+    for (int j = 0; j < R; j++) {
+      for (int i = 0; i < C; i++) {
+        System.out.println(Arrays.toString(contentArray[j][i]));
+      }
+    }
+    System.out.println("---------");
+    */
+
+    //everything works so far
+    //next step is to do all the other rows
+
+    for (int i = R - 2; i > -1; i--) {
+      for (int j = C - 1; j > -1; j--) {
+        //contentArray[i][j] = contentArray[i + 1][j].clone();
+        for (int k = j - 1; k > -1; k--) {
+          //contentArray[i][j][array[i][k]] -= 1;
+        }
+      }
+    }
+
+    System.out.println("---------");
+    for (int j = 0; j < R; j++) {
+      for (int i = 0; i < C; i++) {
+        //System.out.println(Arrays.toString(contentArray[j][i]));
+      }
+    }
+    System.out.println("---------");
+  }
+}

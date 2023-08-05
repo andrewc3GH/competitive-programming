@@ -1,0 +1,24 @@
+var = inPut()
+out = open('race.out', 'w')
+for i in range(var[1]):
+  lhst = 0
+  currentSpeed = 1
+  maxSpeed = 1
+  minSpeed = var[2][i]
+  time = 0
+  rhst = minSpeed
+  while True:
+    lhst += maxSpeed
+    rhst += maxSpeed
+    if lhst + rhst > var[0]:
+      if (var[0] - (lhst + rhst - 2 * maxSpeed)) < maxSpeed:
+        time += 1
+      elif (var[0] - (lhst + rhst - 2 * maxSpeed)) < (2 * maxSpeed):
+        time += 2
+      break
+    time += 2
+    if lhst + rhst == var[0]:
+      break
+    maxSpeed += 1
+  out.write(str(time) + '\n')
+out.close()
